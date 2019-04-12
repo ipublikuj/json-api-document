@@ -1,0 +1,52 @@
+{
+  "name" : "ipub/json-api-object",
+  "type" : "library",
+  "description" : "JSON:API object definition",
+  "keywords" : [
+    "jsonapi",
+    "json",
+    "api",
+    "client",
+    "fastybird",
+    "ipub",
+    "ipublikuj",
+    "framework",
+    "tools"
+  ],
+  "homepage" : "https://github.com/iPublikuj/json-api-object",
+  "license" : [
+    "GPL-2.0",
+    "GPL-3.0"
+  ],
+
+  "authors" : [
+    {
+      "name" : "iPublikuj:cms",
+      "email" : "info@ipublikuj.eu",
+      "homepage" : "https://www.ipublikuj.eu/"
+    }
+  ],
+
+  "support" : {
+    "email" : "support@fastybird.com",
+    "issues" : "https://github.com/iPublikuj/json-api-object/issues"
+  },
+
+  "require" : {
+    "php" : ">=7.1.0",
+
+    "cloudcreativity/utils-object" : "^1.0",
+
+    "neomerx/json-api" : "^3.0"
+  },
+
+  "require-dev" : {
+    "pds/skeleton" : "~1.0"
+  },
+
+  "autoload" : {
+    "psr-0" : {
+      "IPub\\JsonAPIObject\\" : "src/"
+    }
+  }
+}
