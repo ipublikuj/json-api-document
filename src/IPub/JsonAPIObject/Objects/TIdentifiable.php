@@ -16,7 +16,7 @@ declare(strict_types = 1);
 
 namespace IPub\JsonAPIObject\Objects;
 
-use Neomerx\JsonApi\Contracts\Document\DocumentInterface;
+use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 
 use IPub\JsonAPIObject\Exceptions;
 

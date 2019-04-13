@@ -18,7 +18,7 @@ namespace IPub\JsonAPIObject\Objects;
 
 use CloudCreativity\Utils\Object\StandardObjectInterface;
 
-use Neomerx\JsonApi\Contracts\Document\DocumentInterface as NeomerxDocumentInterface;
+use Neomerx\JsonApi\Contracts\Schema\DocumentInterface as NeomerxDocumentInterface;
 
 use IPub\JsonAPIObject\Exceptions;
 

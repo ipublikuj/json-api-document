@@ -16,10 +16,10 @@ declare(strict_types = 1);
 
 namespace IPub\JsonAPIObject\Objects;
 
-use Neomerx\JsonApi\Contracts\Document\ErrorInterface;
-use Neomerx\JsonApi\Contracts\Document\LinkInterface;
-use Neomerx\JsonApi\Document\Link;
-use Neomerx\JsonApi\Exceptions\ErrorCollection;
+use Neomerx\JsonApi\Contracts\Schema\ErrorInterface;
+use Neomerx\JsonApi\Contracts\Schema\LinkInterface;
+use Neomerx\JsonApi\Schema\Link;
+use Neomerx\JsonApi\Schema\ErrorCollection;
 
 use IPub\JsonAPIObject\Exceptions;
 

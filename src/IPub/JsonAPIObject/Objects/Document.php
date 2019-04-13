@@ -19,7 +19,7 @@ namespace IPub\JsonAPIObject\Objects;
 use CloudCreativity\Utils\Object\StandardObject;
 use CloudCreativity\Utils\Object\StandardObjectInterface;
 
-use Neomerx\JsonApi\Exceptions\ErrorCollection;
+use Neomerx\JsonApi\Schema\ErrorCollection;
 
 use IPub\JsonAPIObject\Exceptions;
 
