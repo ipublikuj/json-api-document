@@ -96,7 +96,7 @@ class Document extends StandardObject implements IDocument
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getIncluded() : IResourceObjectCollection
+	public function getIncluded() : ?IResourceObjectCollection
 	{
 		if (!$this->has(self::INCLUDED)) {
 			return NULL;
