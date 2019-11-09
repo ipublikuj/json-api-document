@@ -13,7 +13,9 @@
     "framework",
     "tools"
   ],
+
   "homepage" : "https://github.com/iPublikuj/json-api-object",
+
   "license" : [
     "GPL-2.0",
     "GPL-3.0"
