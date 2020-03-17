@@ -1,39 +1,37 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * Relationships.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Objects;
 
-namespace IPub\JsonAPIObject\Objects;
-
-use CloudCreativity\Utils\Object\StandardObject;
-
-use IPub\JsonAPIObject\Exceptions;
+use IPub\JsonAPIDocument\Exceptions;
 
 /**
  * Relationships
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class Relationships extends StandardObject implements IRelationships
 {
+
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getAll() : \Traversable
+	public function getAll(): \Traversable
 	{
 		foreach ($this->keys() as $key) {
 			yield $key => $this->getRelationship($key);
@@ -41,9 +39,9 @@ class Relationships extends StandardObject implements IRelationships
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getRelationship(string $key) : IRelationship
+	public function getRelationship(string $key): IRelationship
 	{
 		if (!$this->has($key)) {
 			throw new Exceptions\RuntimeException(sprintf('Relationship member "%s" is not present.', $key));
@@ -57,4 +55,5 @@ class Relationships extends StandardObject implements IRelationships
 
 		return new Relationship($value);
 	}
+
 }

@@ -1,39 +1,38 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * Relationship.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Objects;
 
-namespace IPub\JsonAPIObject\Objects;
-
-use CloudCreativity\Utils\Object\StandardObject;
-
-use IPub\JsonAPIObject\Exceptions;
+use IPub\JsonAPIDocument\Exceptions;
+use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 
 /**
  * Relationship
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class Relationship extends StandardObject implements IRelationship
 {
+
 	use TMetaMember;
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
 	public function getData()
 	{
@@ -44,19 +43,19 @@ class Relationship extends StandardObject implements IRelationship
 			throw new Exceptions\RuntimeException('No data member or data member is not a valid relationship.');
 		}
 
-		return $this->hasIdentifier() ? $this->getIdentifier() : NULL;
+		return $this->hasIdentifier() ? $this->getIdentifier() : null;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getIdentifier() : ?IResourceIdentifier
+	public function getIdentifier(): ?IResourceIdentifier
 	{
 		if (!$this->isHasOne()) {
 			throw new Exceptions\RuntimeException('No data member or data member is not a valid has-one relationship.');
 		}
 
-		$data = $this->{self::DATA};
+		$data = $this->{DocumentInterface::KEYWORD_DATA};
 
 		if (!$data) {
 			throw new Exceptions\RuntimeException('No resource identifier - relationship is empty.');
@@ -66,44 +65,45 @@ class Relationship extends StandardObject implements IRelationship
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function hasIdentifier() : bool
+	public function hasIdentifier(): bool
 	{
-		return is_object($this->{self::DATA});
+		return is_object($this->{DocumentInterface::KEYWORD_DATA});
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function isHasOne() : bool
+	public function isHasOne(): bool
 	{
-		if (!$this->has(self::DATA)) {
-			return FALSE;
+		if (!$this->has(DocumentInterface::KEYWORD_DATA)) {
+			return false;
 		}
 
-		$data = $this->{self::DATA};
+		$data = $this->{DocumentInterface::KEYWORD_DATA};
 
 		return is_null($data) || is_object($data);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getIdentifiers() : IResourceIdentifierCollection
+	public function getIdentifiers(): IResourceIdentifierCollection
 	{
 		if (!$this->isHasMany()) {
 			throw new Exceptions\RuntimeException('No data member of data member is not a valid has-many relationship.');
 		}
 
-		return ResourceIdentifierCollection::create($this->{self::DATA});
+		return ResourceIdentifierCollection::create($this->{DocumentInterface::KEYWORD_DATA});
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function isHasMany() : bool
+	public function isHasMany(): bool
 	{
-		return is_array($this->{self::DATA});
+		return is_array($this->{DocumentInterface::KEYWORD_DATA});
 	}
+
 }

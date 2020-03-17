@@ -1,50 +1,46 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * TMetaMember.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Objects;
 
-namespace IPub\JsonAPIObject\Objects;
-
-use CloudCreativity\Utils\Object\StandardObject;
-use CloudCreativity\Utils\Object\StandardObjectInterface;
-
+use IPub\JsonAPIDocument\Exceptions;
 use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
-
-use IPub\JsonAPIObject\Exceptions;
 
 /**
  * Meta member trait
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 trait TMetaMember
 {
+
 	/**
 	 * Get the meta member of the document.
 	 *
-	 * @return StandardObjectInterface
+	 * @return IStandardObject<mixed>
 	 *
 	 * @throws Exceptions\RuntimeException if the meta member is present and is not an object or null
 	 */
-	public function getMeta() : StandardObjectInterface
+	public function getMeta(): IStandardObject
 	{
 		$meta = $this->hasMeta() ? $this->get(DocumentInterface::KEYWORD_META) : new StandardObject();
 
-		if (!is_null($meta) && !$meta instanceof StandardObjectInterface) {
+		if ($meta === null || !$meta instanceof IStandardObject) {
 			throw new Exceptions\RuntimeException('Data member is not an object.');
 		}
 
@@ -54,8 +50,9 @@ trait TMetaMember
 	/**
 	 * @return bool
 	 */
-	public function hasMeta() : bool
+	public function hasMeta(): bool
 	{
 		return $this->has(DocumentInterface::KEYWORD_META);
 	}
+
 }

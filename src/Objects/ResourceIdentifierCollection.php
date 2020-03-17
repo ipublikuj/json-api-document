@@ -1,36 +1,34 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * ResourceIdentifierCollection.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Objects;
 
-namespace IPub\JsonAPIObject\Objects;
-
-use IPub\JsonAPIObject\Exceptions;
+use IPub\JsonAPIDocument\Exceptions;
 
 /**
  * Resource identifier object
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class ResourceIdentifierCollection implements IResourceIdentifierCollection
 {
-	/**
-	 * @var array
-	 */
+
+	/** @var array */
 	private $stack = [];
 
 	/**
@@ -46,7 +44,7 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	 *
 	 * @return void
 	 */
-	public function add(IResourceIdentifier $identifier) : void
+	public function add(IResourceIdentifier $identifier): void
 	{
 		if (!$this->has($identifier)) {
 			$this->stack[] = $identifier;
@@ -54,9 +52,9 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function has(IResourceIdentifier $identifier) : bool
+	public function has(IResourceIdentifier $identifier): bool
 	{
 		return in_array($identifier, $this->stack);
 	}
@@ -66,7 +64,7 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	 *
 	 * @return void
 	 */
-	public function addMany(array $identifiers) : void
+	public function addMany(array $identifiers): void
 	{
 		foreach ($identifiers as $identifier) {
 
@@ -83,7 +81,7 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	 *
 	 * @return void
 	 */
-	public function setAll(array $identifiers) : void
+	public function setAll(array $identifiers): void
 	{
 		$this->clear();
 		$this->addMany($identifiers);
@@ -92,69 +90,69 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	/**
 	 * @return void
 	 */
-	public function clear() : void
+	public function clear(): void
 	{
 		$this->stack = [];
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getIterator() : \ArrayIterator
+	public function getIterator(): \ArrayIterator
 	{
 		return new \ArrayIterator($this->getAll());
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function count() : int
+	public function count(): int
 	{
 		return count($this->stack);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function isEmpty() : bool
+	public function isEmpty(): bool
 	{
-		return empty($this->stack);
+		return $this->stack === [];
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function isComplete() : bool
+	public function isComplete(): bool
 	{
 		/** @var IResourceIdentifier $identifier */
 		foreach ($this as $identifier) {
 			if (!$identifier->isComplete()) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function isOnly($typeOrTypes) : bool
+	public function isOnly($typeOrTypes): bool
 	{
 		/** @var IResourceIdentifier $identifier */
 		foreach ($this as $identifier) {
 			if (!$identifier->isType($typeOrTypes)) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function map(?array $typeMap = NULL)
+	public function map(?array $typeMap = null)
 	{
 		$ret = [];
 
@@ -174,17 +172,17 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getAll() : array
+	public function getAll(): array
 	{
 		return $this->stack;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getIds() : array
+	public function getIds(): array
 	{
 		$ids = [];
 
@@ -211,4 +209,5 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 
 		return $collection;
 	}
+
 }

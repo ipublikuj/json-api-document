@@ -1,20 +1,20 @@
 {
-  "name" : "ipub/json-api-object",
+  "name" : "ipub/json-api-document",
   "type" : "library",
-  "description" : "JSON:API object definition",
+  "description" : "JSON:API document factory",
   "keywords" : [
     "jsonapi",
     "json",
     "api",
     "client",
-    "fastybird",
+    "document",
     "ipub",
     "ipublikuj",
     "framework",
     "tools"
   ],
 
-  "homepage" : "https://github.com/iPublikuj/json-api-object",
+  "homepage" : "https://github.com/iPublikuj/json-api-document",
 
   "license" : [
     "GPL-2.0",
@@ -31,15 +31,17 @@
 
   "support" : {
     "email" : "support@fastybird.com",
-    "issues" : "https://github.com/iPublikuj/json-api-object/issues"
+    "issues" : "https://github.com/iPublikuj/json-api-document/issues"
   },
+
+  "prefer-stable" : true,
+
+  "minimum-stability" : "dev",
 
   "require" : {
     "php" : ">=7.1.0",
-
-    "cloudcreativity/utils-object" : "^1.0",
-
-    "neomerx/json-api" : "^3.0"
+    "ext-json" : "*",
+    "neomerx/json-api" : "^4.0"
   },
 
   "require-dev" : {
@@ -47,8 +49,12 @@
   },
 
   "autoload" : {
-    "psr-0" : {
-      "IPub\\JsonAPIObject\\" : "src/"
+    "psr-4" : {
+      "IPub\\JsonAPIDocument\\" : "src/"
     }
+  },
+
+  "config" : {
+    "sort-packages" : true
   }
 }

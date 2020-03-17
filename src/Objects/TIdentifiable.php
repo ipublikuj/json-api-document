@@ -1,41 +1,40 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * TIdentifiable.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Objects;
 
-namespace IPub\JsonAPIObject\Objects;
-
+use IPub\JsonAPIDocument\Exceptions;
 use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
-
-use IPub\JsonAPIObject\Exceptions;
 
 /**
  * Identifiable trait
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 trait TIdentifiable
 {
+
 	/**
 	 * @return string
 	 *
 	 * @throws Exceptions\RuntimeException if the type member is not present, or is not a string, or is an empty string
 	 */
-	public function getType() : string
+	public function getType(): string
 	{
 		if (!$this->has(DocumentInterface::KEYWORD_TYPE)) {
 			throw new Exceptions\RuntimeException('Type member not present.');
@@ -43,7 +42,7 @@ trait TIdentifiable
 
 		$type = $this->get(DocumentInterface::KEYWORD_TYPE);
 
-		if (!is_string($type) || empty($type)) {
+		if (!is_string($type) || $type === '') {
 			throw new Exceptions\RuntimeException('Type member is not a string, or is empty.');
 		}
 
@@ -53,7 +52,7 @@ trait TIdentifiable
 	/**
 	 * @return bool
 	 */
-	public function hasType() : bool
+	public function hasType(): bool
 	{
 		return $this->has(DocumentInterface::KEYWORD_TYPE);
 	}
@@ -63,7 +62,7 @@ trait TIdentifiable
 	 *
 	 * @throws Exceptions\RuntimeException if the id member is not present, or is not a string/int, or is an empty string
 	 */
-	public function getId() : string
+	public function getId(): string
 	{
 		if (!$this->has(DocumentInterface::KEYWORD_ID)) {
 			throw new Exceptions\RuntimeException('Id member not present.');
@@ -75,7 +74,7 @@ trait TIdentifiable
 			throw new Exceptions\RuntimeException('Id member is not a string.');
 		}
 
-		if (empty($id)) {
+		if ($id === '') {
 			throw new Exceptions\RuntimeException('Id member is an empty string.');
 		}
 
@@ -85,8 +84,9 @@ trait TIdentifiable
 	/**
 	 * @return bool
 	 */
-	public function hasId() : bool
+	public function hasId(): bool
 	{
 		return $this->has(DocumentInterface::KEYWORD_ID);
 	}
+
 }

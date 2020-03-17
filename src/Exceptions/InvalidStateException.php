@@ -1,21 +1,21 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * InvalidStateException.php
  *
  * @copyright      More in license.md
  * @license        https://www.ipublikuj.eu
  * @author         Adam Kadlec https://www.ipublikuj.eu
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Exceptions
  * @since          1.0.0
  *
  * @date           12.05.17
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Exceptions;
 
-namespace IPub\JsonAPIObject\Exceptions;
-
-class InvalidStateException extends \Nette\InvalidStateException implements IException
+class InvalidStateException extends RuntimeException implements IException
 {
+
 }

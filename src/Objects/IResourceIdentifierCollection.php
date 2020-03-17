@@ -1,31 +1,31 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * IResourceIdentifierCollection.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
-
-namespace IPub\JsonAPIObject\Objects;
+namespace IPub\JsonAPIDocument\Objects;
 
 /**
  * Resource identifiers collection interface
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 {
+
 	/**
 	 * Does the collection contain the supplied identifier?
 	 *
@@ -33,28 +33,28 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	 *
 	 * @return bool
 	 */
-	public function has(IResourceIdentifier $identifier) : bool;
+	public function has(IResourceIdentifier $identifier): bool;
 
 	/**
 	 * Get the collection as an array
 	 *
 	 * @return IResourceIdentifier[]
 	 */
-	public function getAll() : array;
+	public function getAll(): array;
 
 	/**
 	 * Is the collection empty?
 	 *
 	 * @return bool
 	 */
-	public function isEmpty() : bool;
+	public function isEmpty(): bool;
 
 	/**
 	 * Is every identifier in the collection complete?
 	 *
 	 * @return bool
 	 */
-	public function isComplete() : bool;
+	public function isComplete(): bool;
 
 	/**
 	 * Does every identifier in the collection match the supplied type/any of the supplied types?
@@ -63,14 +63,14 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	 *
 	 * @return bool
 	 */
-	public function isOnly($typeOrTypes) : bool;
+	public function isOnly($typeOrTypes): bool;
 
 	/**
 	 * Get an array of the ids of each identifier in the collection
 	 *
 	 * @return string[]
 	 */
-	public function getIds() : array;
+	public function getIds(): array;
 
 	/**
 	 * Map the collection to an array of type keys and id values
@@ -104,9 +104,10 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	 * ]
 	 * ```
 	 *
-	 * @param string[]|NULL $typeMap if an array, map the identifier types to the supplied types.
+	 * @param string[]|null $typeMap if an array, map the identifier types to the supplied types.
 	 *
 	 * @return mixed
 	 */
-	public function map(?array $typeMap = NULL);
+	public function map(?array $typeMap = null);
+
 }

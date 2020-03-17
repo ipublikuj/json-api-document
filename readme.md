@@ -1,6 +1,5 @@
-# JSON:API object
+# {JSON:API} object
 
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/iPublikuj/json-api-object.svg?style=flat-square)](https://scrutinizer-ci.com/g/iPublikuj/json-api-object/?branch=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ipub/json-api-object.svg?style=flat-square)](https://packagist.org/packages/ipub/json-api-object)
 [![Composer Downloads](https://img.shields.io/packagist/dt/ipub/json-api-object.svg?style=flat-square)](https://packagist.org/packages/ipub/json-api-object)
 [![License](https://img.shields.io/packagist/l/ipub/json-api-object.svg?style=flat-square)](https://packagist.org/packages/ipub/json-api-object)

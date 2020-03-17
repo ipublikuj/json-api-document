@@ -1,36 +1,35 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * ResourceObjectCollection.php
  *
- * @copyright      More in license.md
- * @license        https://www.ipublikuj.eu
+ * @license        More in license.md
+ * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  * @since          1.0.0
  *
  * @date           05.05.18
  */
 
-declare(strict_types = 1);
+namespace IPub\JsonAPIDocument\Objects;
 
-namespace IPub\JsonAPIObject\Objects;
-
-use IPub\JsonAPIObject\Exceptions;
+use ArrayIterator;
+use IPub\JsonAPIDocument\Exceptions;
 
 /**
  * Resource objects collection
  *
- * @package        iPublikuj:JsonAPIObject!
+ * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class ResourceObjectCollection implements IResourceObjectCollection
 {
-	/**
-	 * @var IResourceObject[]
-	 */
+
+	/** @var IResourceObject[] */
 	private $stack = [];
 
 	/**
@@ -56,17 +55,17 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getIterator() : \ArrayIterator
+	public function getIterator(): ArrayIterator
 	{
-		return new \ArrayIterator($this->stack);
+		return new ArrayIterator($this->stack);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function has(IResourceIdentifier $identifier) : bool
+	public function has(IResourceIdentifier $identifier): bool
 	{
 		/** @var IResourceObject $resource */
 		foreach ($this as $resource) {
@@ -79,9 +78,9 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function get(IResourceIdentifier $identifier) : IResourceObject
+	public function get(IResourceIdentifier $identifier): IResourceObject
 	{
 		/** @var IResourceObject $resource */
 		foreach ($this as $resource) {
@@ -95,17 +94,17 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getAll() : array
+	public function getAll(): array
 	{
 		return $this->stack;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function getIdentifiers() : IResourceIdentifierCollection
+	public function getIdentifiers(): IResourceIdentifierCollection
 	{
 		$collection = new ResourceIdentifierCollection;
 
@@ -118,17 +117,17 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function isEmpty() : bool
+	public function isEmpty(): bool
 	{
-		return empty($this->stack);
+		return $this->stack === [];
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
-	public function count() : int
+	public function count(): int
 	{
 		return count($this->stack);
 	}
@@ -138,7 +137,7 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 *
 	 * @return void
 	 */
-	public function add(IResourceObject $resource) : void
+	public function add(IResourceObject $resource): void
 	{
 		if (!$this->has($resource->getIdentifier())) {
 			$this->stack[] = $resource;
@@ -150,7 +149,7 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 *
 	 * @return void
 	 */
-	public function addMany(array $resources) : void
+	public function addMany(array $resources): void
 	{
 		foreach ($resources as $resource) {
 			if (!$resource instanceof IResourceObject) {
@@ -160,4 +159,5 @@ class ResourceObjectCollection implements IResourceObjectCollection
 			$this->add($resource);
 		}
 	}
+
 }
