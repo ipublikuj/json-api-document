@@ -3,20 +3,20 @@
 /**
  * TMetaMember.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
+use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
-use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 
 /**
  * Meta member trait
@@ -38,7 +38,7 @@ trait TMetaMember
 	 */
 	public function getMeta(): IStandardObject
 	{
-		$meta = $this->hasMeta() ? $this->get(DocumentInterface::KEYWORD_META) : new StandardObject();
+		$meta = $this->hasMeta() ? $this->get(JsonAPIDocument\IDocument::KEYWORD_META) : new StandardObject();
 
 		if ($meta === null || !$meta instanceof IStandardObject) {
 			throw new Exceptions\RuntimeException('Data member is not an object.');
@@ -52,7 +52,7 @@ trait TMetaMember
 	 */
 	public function hasMeta(): bool
 	{
-		return $this->has(DocumentInterface::KEYWORD_META);
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_META);
 	}
 
 }

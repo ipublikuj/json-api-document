@@ -3,18 +3,20 @@
 /**
  * ResourceIdentifierCollection.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
+use ArrayIterator;
+use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
 
 /**
@@ -28,21 +30,64 @@ use IPub\JsonAPIDocument\Exceptions;
 class ResourceIdentifierCollection implements IResourceIdentifierCollection
 {
 
-	/** @var array */
-	private $stack = [];
+	/** @var IResourceIdentifier[] */
+	private array $stack;
 
 	/**
-	 * @param array $identifiers
+	 * @param mixed[] $input
+	 *
+	 * @return IResourceIdentifierCollection
+	 */
+	public static function create(array $input): IResourceIdentifierCollection
+	{
+		$collection = new self();
+
+		foreach ($input as $value) {
+			if (
+				$value instanceof IStandardObject
+				&& $value->has(JsonAPIDocument\IDocument::KEYWORD_TYPE)
+				&& $value->has(JsonAPIDocument\IDocument::KEYWORD_ID)
+				&& is_string($value->get(JsonAPIDocument\IDocument::KEYWORD_TYPE))
+				&& is_string($value->get(JsonAPIDocument\IDocument::KEYWORD_ID))
+			) {
+				$collection->add(
+					new ResourceIdentifier(
+						$value->get(JsonAPIDocument\IDocument::KEYWORD_TYPE),
+						$value->get(JsonAPIDocument\IDocument::KEYWORD_ID)
+					)
+				);
+			}
+		}
+
+		return $collection;
+	}
+
+	/**
+	 * @param mixed[] $identifiers
 	 */
 	public function __construct(array $identifiers = [])
 	{
+		$this->stack = [];
+
 		$this->addMany($identifiers);
 	}
 
 	/**
-	 * @param IResourceIdentifier $identifier
-	 *
-	 * @return void
+	 * {@inheritDoc}
+	 */
+	public function addMany(array $identifiers): void
+	{
+		foreach ($identifiers as $identifier) {
+			if (!$identifier instanceof IResourceIdentifier) {
+				throw new Exceptions\InvalidArgumentException('Expecting only identifier objects.');
+			}
+
+			$this->add($identifier);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public function add(IResourceIdentifier $identifier): void
 	{
@@ -56,39 +101,21 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	 */
 	public function has(IResourceIdentifier $identifier): bool
 	{
-		return in_array($identifier, $this->stack);
+		return in_array($identifier, $this->stack, true);
 	}
 
 	/**
-	 * @param IResourceIdentifier[] $identifiers
-	 *
-	 * @return void
-	 */
-	public function addMany(array $identifiers): void
-	{
-		foreach ($identifiers as $identifier) {
-
-			if (!$identifier instanceof IResourceIdentifier) {
-				throw new Exceptions\InvalidArgumentException('Expecting only identifier objects.');
-			}
-
-			$this->add($identifier);
-		}
-	}
-
-	/**
-	 * @param array $identifiers
-	 *
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	public function setAll(array $identifiers): void
 	{
 		$this->clear();
+
 		$this->addMany($identifiers);
 	}
 
 	/**
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	public function clear(): void
 	{
@@ -97,10 +124,20 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @phpstan-return ArrayIterator<int, IResourceIdentifier>
 	 */
-	public function getIterator(): \ArrayIterator
+	public function getIterator(): ArrayIterator
 	{
-		return new \ArrayIterator($this->getAll());
+		return new ArrayIterator($this->getAll());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getAll(): array
+	{
+		return $this->stack;
 	}
 
 	/**
@@ -122,25 +159,9 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isComplete(): bool
-	{
-		/** @var IResourceIdentifier $identifier */
-		foreach ($this as $identifier) {
-			if (!$identifier->isComplete()) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function isOnly($typeOrTypes): bool
 	{
-		/** @var IResourceIdentifier $identifier */
-		foreach ($this as $identifier) {
+		foreach ($this->stack as $identifier) {
 			if (!$identifier->isType($typeOrTypes)) {
 				return false;
 			}
@@ -156,9 +177,7 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	{
 		$ret = [];
 
-		/** @var IResourceIdentifier $identifier */
-		foreach ($this as $identifier) {
-
+		foreach ($this->stack as $identifier) {
 			$key = is_array($typeMap) ? $identifier->mapType($typeMap) : $identifier->getType();
 
 			if (!isset($ret[$key])) {
@@ -174,40 +193,15 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getAll(): array
-	{
-		return $this->stack;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getIds(): array
 	{
 		$ids = [];
 
-		/** @var IResourceIdentifier $identifier */
-		foreach ($this as $identifier) {
+		foreach ($this->stack as $identifier) {
 			$ids[] = $identifier->getId();
 		}
 
 		return $ids;
-	}
-
-	/**
-	 * @param array $input
-	 *
-	 * @return ResourceIdentifierCollection
-	 */
-	public static function create(array $input)
-	{
-		$collection = new static();
-
-		foreach ($input as $value) {
-			$collection->add(new ResourceIdentifier($value));
-		}
-
-		return $collection;
 	}
 
 }

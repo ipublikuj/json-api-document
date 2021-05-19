@@ -3,12 +3,12 @@
 /**
  * IResourceObject.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
@@ -25,29 +25,8 @@ use IPub\JsonAPIDocument\Exceptions;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IResourceObject extends IStandardObject, IMetaMember
+interface IResourceObject extends IStandardObject, IIdentifiable, IMetaMember
 {
-
-	/**
-	 * Get the type member
-	 *
-	 * @return string
-	 *
-	 * @throws Exceptions\RuntimeException if no type is set, is empty or is not a string
-	 */
-	public function getType(): string;
-
-	/**
-	 * @return string|int
-	 *
-	 * @throws Exceptions\RuntimeException if no id is set, is not a string or integer, or is an empty string
-	 */
-	public function getId();
-
-	/**
-	 * @return bool
-	 */
-	public function hasId(): bool;
 
 	/**
 	 * Get the type and id members as a resource identifier object
@@ -62,6 +41,8 @@ interface IResourceObject extends IStandardObject, IMetaMember
 	 * @return IStandardObject
 	 *
 	 * @throws Exceptions\RuntimeException if the attributes member is present and is not an object
+	 *
+	 * @phpstan-return IStandardObject<string, mixed>
 	 */
 	public function getAttributes(): IStandardObject;
 
@@ -71,18 +52,6 @@ interface IResourceObject extends IStandardObject, IMetaMember
 	public function hasAttributes(): bool;
 
 	/**
-	 * @return IRelationships
-	 *
-	 * @throws Exceptions\RuntimeException if the relationships member is present and is not an object
-	 */
-	public function getRelationships(): IRelationships;
-
-	/**
-	 * @return bool
-	 */
-	public function hasRelationships(): bool;
-
-	/**
 	 * Get a relationship object by its key
 	 *
 	 * @param string $key
@@ -90,7 +59,23 @@ interface IResourceObject extends IStandardObject, IMetaMember
 	 * @return IRelationship|null the relationship object or null if it is not present
 	 *
 	 * @throws Exceptions\RuntimeException
+	 *
+	 * @phpstan-return IRelationship<string, IStandardObject>
 	 */
-	public function getRelationship(string $key): IRelationship;
+	public function getRelationship(string $key): ?IRelationship;
+
+	/**
+	 * @return IRelationshipCollection
+	 *
+	 * @throws Exceptions\RuntimeException if the relationships member is not present or is not an object
+	 *
+	 * @phpstan-return IRelationshipCollection<IRelationship<string, IStandardObject>>
+	 */
+	public function getRelationships(): IRelationshipCollection;
+
+	/**
+	 * @return bool
+	 */
+	public function hasRelationships(): bool;
 
 }

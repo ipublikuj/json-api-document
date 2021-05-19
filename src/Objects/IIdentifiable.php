@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
 /**
- * IMetaMember.php
+ * IResourceObject.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          0.0.1
+ * @since          0.2.0
  *
- * @date           05.05.18
+ * @date           18.05.21
  */
 
 namespace IPub\JsonAPIDocument\Objects;
@@ -18,30 +18,35 @@ namespace IPub\JsonAPIDocument\Objects;
 use IPub\JsonAPIDocument\Exceptions;
 
 /**
- * Meta member interface
+ * Identifiable object interface
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IMetaMember
+interface IIdentifiable extends IStandardObject
 {
 
 	/**
-	 * Get the meta member of the object
+	 * Get the type member
 	 *
-	 * @return IStandardObject
+	 * @return string
 	 *
-	 * @throws Exceptions\RuntimeException if the meta member is present and is not an object
+	 * @throws Exceptions\RuntimeException if no type is set, is empty or is not a string
 	 */
-	public function getMeta(): IStandardObject;
+	public function getType(): string;
 
 	/**
-	 * Does the object have meta?
+	 * @return string|int
 	 *
+	 * @throws Exceptions\RuntimeException if no id is set, is not a string or integer, or is an empty string
+	 */
+	public function getId();
+
+	/**
 	 * @return bool
 	 */
-	public function hasMeta(): bool;
+	public function hasId(): bool;
 
 }

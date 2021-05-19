@@ -3,78 +3,63 @@
 /**
  * Error.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
-use IPub\JsonAPIDocument\Exceptions;
-use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
-use Neomerx\JsonApi\Contracts\Schema\ErrorInterface;
-use Neomerx\JsonApi\Contracts\Schema\LinkInterface;
-use Neomerx\JsonApi\Schema\Link;
+use IPub\JsonAPIDocument;
 
-class Error extends StandardObject implements ErrorInterface
+/**
+ * Error object
+ *
+ * @package        iPublikuj:JsonAPIDocument!
+ * @subpackage     Objects
+ *
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ */
+class Error extends StandardObject implements IError
 {
-
-	use TMetaMember;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getId()
+	public function getId(): ?string
 	{
-		return $this->has(DocumentInterface::KEYWORD_ERRORS_ID) ? $this->get(DocumentInterface::KEYWORD_ERRORS_ID) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_ID) ? (string) $this->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_ID) : null;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getLinks(): ?iterable
+	public function getLinks(): ?array
 	{
-		$links = [];
+		if ($this->has(JsonAPIDocument\IDocument::KEYWORD_LINKS)) {
+			$links = $this->get(JsonAPIDocument\IDocument::KEYWORD_LINKS);
 
-		if ($this->has(DocumentInterface::KEYWORD_LINKS)) {
-			foreach ((array) $this->get(DocumentInterface::KEYWORD_LINKS) as $key => $link) {
-				if (is_string($link)) {
-					$link = new Link(false, $link, true);
-
-				} elseif ($link instanceof IStandardObject) {
-					$link = new Link(false, (string) $link->get('href'), true);
-				}
-
-				if (!$link instanceof LinkInterface) {
-					throw new Exceptions\InvalidArgumentException('Expecting links to contain link objects.');
-				}
-
-				$links[$key] = $link;
+			if ($links instanceof IStandardObject && $links->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_ABOUT)) {
+				return [
+					JsonAPIDocument\IDocument::KEYWORD_ERRORS_ABOUT => (string) $links->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_ABOUT),
+				];
 			}
 		}
 
-		return $links;
+		return null;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTypeLinks(): ?iterable
+	public function getStatus(): ?int
 	{
-		return [];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getStatus(): ?string
-	{
-		return $this->has(DocumentInterface::KEYWORD_ERRORS_STATUS) ? (string) $this->get(DocumentInterface::KEYWORD_ERRORS_STATUS) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_STATUS) ? (int) $this->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_STATUS) : null;
 	}
 
 	/**
@@ -82,7 +67,7 @@ class Error extends StandardObject implements ErrorInterface
 	 */
 	public function getCode(): ?string
 	{
-		return $this->has(DocumentInterface::KEYWORD_ERRORS_CODE) ? (string) $this->get(DocumentInterface::KEYWORD_ERRORS_CODE) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_CODE) ? (string) $this->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_CODE) : null;
 	}
 
 	/**
@@ -90,7 +75,7 @@ class Error extends StandardObject implements ErrorInterface
 	 */
 	public function getTitle(): ?string
 	{
-		return $this->has(DocumentInterface::KEYWORD_ERRORS_TITLE) ? (string) $this->get(DocumentInterface::KEYWORD_ERRORS_TITLE) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_TITLE) ? (string) $this->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_TITLE) : null;
 	}
 
 	/**
@@ -98,7 +83,7 @@ class Error extends StandardObject implements ErrorInterface
 	 */
 	public function getDetail(): ?string
 	{
-		return $this->has(DocumentInterface::KEYWORD_ERRORS_DETAIL) ? (string) $this->get(DocumentInterface::KEYWORD_ERRORS_DETAIL) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_DETAIL) ? (string) $this->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_DETAIL) : null;
 	}
 
 	/**
@@ -106,7 +91,7 @@ class Error extends StandardObject implements ErrorInterface
 	 */
 	public function getSource(): ?array
 	{
-		return $this->has(DocumentInterface::KEYWORD_ERRORS_SOURCE) ? (array) $this->get(DocumentInterface::KEYWORD_ERRORS_SOURCE) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ERRORS_SOURCE) ? (array) $this->get(JsonAPIDocument\IDocument::KEYWORD_ERRORS_SOURCE) : null;
 	}
 
 }

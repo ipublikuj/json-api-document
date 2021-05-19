@@ -3,12 +3,12 @@
 /**
  * ResourceIdentifier.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
@@ -16,7 +16,6 @@
 namespace IPub\JsonAPIDocument\Objects;
 
 use IPub\JsonAPIDocument\Exceptions;
-use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 
 /**
  * Resource identifier object
@@ -26,11 +25,14 @@ use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-class ResourceIdentifier extends StandardObject implements IResourceIdentifier
+class ResourceIdentifier implements IResourceIdentifier
 {
 
-	use TIdentifiable;
-	use TMetaMember;
+	/** @var string */
+	private string $type;
+
+	/** @var string */
+	private string $id;
 
 	/**
 	 * @param string $type
@@ -40,12 +42,31 @@ class ResourceIdentifier extends StandardObject implements IResourceIdentifier
 	 */
 	public static function create(string $type, string $id): IResourceIdentifier
 	{
-		$identifier = new self();
+		return new self($type, $id);
+	}
 
-		$identifier->set(DocumentInterface::KEYWORD_TYPE, $type)
-			->set(DocumentInterface::KEYWORD_ID, $id);
+	public function __construct(
+		string $type,
+		string $id
+	) {
+		$this->type = $type;
+		$this->id = $id;
+	}
 
-		return $identifier;
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getId(): string
+	{
+		return $this->id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getType(): string
+	{
+		return $this->type;
 	}
 
 	/**
@@ -53,29 +74,19 @@ class ResourceIdentifier extends StandardObject implements IResourceIdentifier
 	 */
 	public function isType($typeOrTypes): bool
 	{
-		return in_array($this->get(DocumentInterface::KEYWORD_TYPE), (array) $typeOrTypes, true);
+		return in_array($this->type, (array) $typeOrTypes, true);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function mapType(array $map)
+	public function mapType(array $types): string
 	{
-		$type = $this->getType();
-
-		if (array_key_exists($type, $map)) {
-			return $map[$type];
+		if (array_key_exists($this->type, $types)) {
+			return $types[$this->type];
 		}
 
-		throw new Exceptions\RuntimeException(sprintf('Type "%s" is not in the supplied map.', $type));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isComplete(): bool
-	{
-		return $this->hasType() && $this->hasId();
+		throw new Exceptions\RuntimeException(sprintf('Type "%s" is not in the supplied map.', $this->type));
 	}
 
 	/**
@@ -83,8 +94,8 @@ class ResourceIdentifier extends StandardObject implements IResourceIdentifier
 	 */
 	public function isSame(IResourceIdentifier $identifier): bool
 	{
-		return $this->getType() === $identifier->getType() &&
-			$this->getId() === $identifier->getId();
+		return $this->type === $identifier->getType() &&
+			$this->id === $identifier->getId();
 	}
 
 	/**
@@ -92,7 +103,7 @@ class ResourceIdentifier extends StandardObject implements IResourceIdentifier
 	 */
 	public function toString(): string
 	{
-		return sprintf('%s:%s', $this->getType(), $this->getId());
+		return sprintf('%s:%s', $this->type, $this->id);
 	}
 
 }

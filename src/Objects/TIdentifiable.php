@@ -3,20 +3,20 @@
 /**
  * TIdentifiable.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
+use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
-use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 
 /**
  * Identifiable trait
@@ -36,11 +36,11 @@ trait TIdentifiable
 	 */
 	public function getType(): string
 	{
-		if (!$this->has(DocumentInterface::KEYWORD_TYPE)) {
+		if (!$this->has(JsonAPIDocument\IDocument::KEYWORD_TYPE)) {
 			throw new Exceptions\RuntimeException('Type member not present.');
 		}
 
-		$type = $this->get(DocumentInterface::KEYWORD_TYPE);
+		$type = $this->get(JsonAPIDocument\IDocument::KEYWORD_TYPE);
 
 		if (!is_string($type) || $type === '') {
 			throw new Exceptions\RuntimeException('Type member is not a string, or is empty.');
@@ -54,7 +54,7 @@ trait TIdentifiable
 	 */
 	public function hasType(): bool
 	{
-		return $this->has(DocumentInterface::KEYWORD_TYPE);
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_TYPE);
 	}
 
 	/**
@@ -64,11 +64,11 @@ trait TIdentifiable
 	 */
 	public function getId(): string
 	{
-		if (!$this->has(DocumentInterface::KEYWORD_ID)) {
+		if (!$this->has(JsonAPIDocument\IDocument::KEYWORD_ID)) {
 			throw new Exceptions\RuntimeException('Id member not present.');
 		}
 
-		$id = $this->get(DocumentInterface::KEYWORD_ID);
+		$id = $this->get(JsonAPIDocument\IDocument::KEYWORD_ID);
 
 		if (!is_string($id)) {
 			throw new Exceptions\RuntimeException('Id member is not a string.');
@@ -86,7 +86,7 @@ trait TIdentifiable
 	 */
 	public function hasId(): bool
 	{
-		return $this->has(DocumentInterface::KEYWORD_ID);
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ID);
 	}
 
 }

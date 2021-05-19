@@ -3,12 +3,12 @@
 /**
  * IStandardObject.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           17.03.20
  */
@@ -20,6 +20,16 @@ use JsonSerializable;
 use stdClass;
 use Traversable;
 
+/**
+ * Standard object interface
+ *
+ * @package        iPublikuj:JsonAPIDocument!
+ * @subpackage     Objects
+ *
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ *
+ * @extends Traversable<string, mixed>
+ */
 interface IStandardObject extends Traversable, Countable, JsonSerializable
 {
 
@@ -27,21 +37,14 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 * @param string $key
 	 * @param mixed $default
 	 *
-	 * @return IStandardObject|mixed
+	 * @return mixed|mixed[]|null
 	 */
 	public function get(string $key, $default = null);
 
 	/**
 	 * @param string|string[] ...$keys
 	 *
-	 * @return mixed[]
-	 */
-	public function getProperties(...$keys): array;
-
-	/**
-	 * @param string|string[] ...$keys
-	 *
-	 * @return mixed[]
+	 * @return Array<string, mixed|mixed[]|null>
 	 */
 	public function getMany(...$keys): array;
 
@@ -49,38 +52,23 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 * @param string $key
 	 * @param mixed $value
 	 *
-	 * @return self
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function set(string $key, $value): IStandardObject;
 
 	/**
-	 * @param mixed[] $values
+	 * @param Array<string, mixed|mixed[]|null> $values
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
-	public function setProperties(array $values): IStandardObject;
+	public function setMany(array $values): IStandardObject;
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
-	 *
-	 * @return IStandardObject
-	 */
-	public function add(string $key, $value): IStandardObject;
-
-	/**
-	 * @param mixed[] $values
-	 *
-	 * @return IStandardObject
-	 */
-	public function addProperties(array $values): IStandardObject;
-
-	/**
-	 * @param string[] ...$keys
 	 *
 	 * @return bool
 	 */
-	public function has(...$keys): bool;
+	public function has(string $key): bool;
 
 	/**
 	 * @param string[] ...$keys
@@ -90,41 +78,41 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	public function hasAny(...$keys): bool;
 
 	/**
+	 * @return string[]
+	 */
+	public function keys(): array;
+
+	/**
+	 * @return IStandardObject<string, mixed>
+	 */
+	public function copy(): IStandardObject;
+
+	/**
 	 * @param string[] ...$key
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function remove(...$key): IStandardObject;
 
 	/**
 	 * @param string[] ...$keys
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function reduce(...$keys): IStandardObject;
-
-	/**
-	 * @return IStandardObject
-	 */
-	public function copy(): IStandardObject;
-
-	/**
-	 * @return string[]
-	 */
-	public function keys(): array;
 
 	/**
 	 * @param string $currentKey
 	 * @param string $newKey
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function rename(string $currentKey, string $newKey): IStandardObject;
 
 	/**
 	 * @param mixed[] $mapping
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function renameKeys(array $mapping): IStandardObject;
 
@@ -132,25 +120,25 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 * @param callable $transform
 	 * @param string[] $keys
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function transform(callable $transform, ...$keys): IStandardObject;
 
 	/**
 	 * @param callable $transform
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, mixed>
 	 */
 	public function transformKeys(callable $transform): IStandardObject;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 	/**
 	 * @return stdClass
 	 */
 	public function toStdClass(): stdClass;
+
+	/**
+	 * @return mixed[]
+	 */
+	public function toArray(): array;
 
 }

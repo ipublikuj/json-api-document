@@ -3,12 +3,12 @@
 /**
  * Obj.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           17.03.20
  */
@@ -23,7 +23,7 @@ class Obj
 {
 
 	/**
-	 * @param IStandardObject|object $data
+	 * @param IStandardObject|stdClass $data
 	 * @param string $key
 	 * @param mixed $default
 	 *
@@ -41,11 +41,11 @@ class Obj
 
 		$value = $data->{$key};
 
-		return is_object($value) ? static::cast($value) : $value;
+		return $value instanceof IStandardObject || $value instanceof stdClass ? static::cast($value) : $value;
 	}
 
 	/**
-	 * @param IStandardObject|object|null $data
+	 * @param IStandardObject|stdClass|null $data
 	 *
 	 * @return IStandardObject
 	 */
@@ -55,17 +55,17 @@ class Obj
 	}
 
 	/**
-	 * @param object $data
+	 * @param stdClass $data
 	 *
-	 * @return object
+	 * @return stdClass
 	 */
-	public static function replicate($data)
+	public static function replicate(stdClass $data): stdClass
 	{
 		$copy = clone $data;
 
-		foreach ($copy as $key => $value) {
-			if (is_object($value)) {
-				$copy->{$key} = static::replicate($value);
+		foreach (array_keys(get_object_vars($copy)) as $key) {
+			if ($data->{$key} instanceof stdClass) {
+				$copy->{$key} = static::replicate($data->{$key});
 			}
 		}
 
@@ -73,63 +73,90 @@ class Obj
 	}
 
 	/**
-	 * @param object|array $data
+	 * @param stdClass|mixed[] $data
 	 *
 	 * @return Traversable
+	 *
+	 * @phpstan-return Traversable<mixed, mixed>
 	 */
 	public static function traverse($data): Traversable
 	{
-		foreach ($data as $key => $value) {
-			yield $key => is_object($value) ? static::cast($value) : $value;
+		/** @phpstan-ignore-next-line */
+		if (!$data instanceof stdClass && !is_array($data)) {
+			throw new Exceptions\InvalidArgumentException('Expecting an object or array to transform keys.');
+		}
+
+		if (is_array($data)) {
+			foreach ($data as $key => $value) {
+				yield $key => $value instanceof stdClass ? static::cast($value) : $value;
+			}
+
+		} else {
+			foreach (array_keys(get_object_vars($data)) as $key) {
+				yield $key => $data->{$key} instanceof stdClass ? static::cast($data->{$key}) : $data->{$key};
+			}
 		}
 	}
 
 	/**
-	 * @param object|array $data
+	 * @param stdClass|mixed[] $data
 	 *
 	 * @return mixed[]
 	 */
 	public static function toArray($data): array
 	{
-		if (!is_object($data) && !is_array($data)) {
-			throw new Exceptions\InvalidArgumentException('Expecting an object or array to convert to an array.');
+		/** @phpstan-ignore-next-line */
+		if (!$data instanceof stdClass && !is_array($data)) {
+			throw new Exceptions\InvalidArgumentException('Expecting an object or array to transform keys.');
 		}
 
 		$arr = [];
 
-		foreach ($data as $key => $value) {
-			$arr[$key] = (is_object($value) || is_array($value)) ? static::toArray($value) : $value;
+		if (is_array($data)) {
+			foreach ($data as $key => $value) {
+				$arr[$key] = ($value instanceof stdClass || is_array($value)) ? static::toArray($value) : $value;
+			}
+
+		} else {
+			foreach (array_keys(get_object_vars($data)) as $key) {
+				$arr[$key] = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? static::toArray($data->{$key}) : $data->{$key};
+			}
 		}
 
 		return $arr;
 	}
 
 	/**
-	 * @param object|array $data
+	 * @param stdClass|mixed[] $data
 	 * @param callable $transform
 	 *
-	 * @return array|stdClass
+	 * @return mixed[]|stdClass
 	 */
 	public static function transformKeys($data, callable $transform)
 	{
-		if (!is_object($data) && !is_array($data)) {
+		/** @phpstan-ignore-next-line */
+		if (!$data instanceof stdClass && !is_array($data)) {
 			throw new Exceptions\InvalidArgumentException('Expecting an object or array to transform keys.');
 		}
 
-		$copy = is_object($data) ? clone $data : $data;
+		if (is_array($data)) {
+			foreach ($data as $key => $value) {
+				$transformed = call_user_func($transform, $key);
 
-		foreach ($copy as $key => $value) {
-			$transformed = call_user_func($transform, $key);
+				$transformedValue = ($value instanceof stdClass || is_array($value)) ? self::transformKeys($value, $transform) : $value;
 
-			$value = (is_object($value) || is_array($value)) ? self::transformKeys($value, $transform) : $value;
-
-			if (is_object($data)) {
-				unset($data->{$key});
-				$data->{$transformed} = $value;
-
-			} else {
 				unset($data[$key]);
-				$data[$transformed] = $value;
+				$data[$transformed] = $transformedValue;
+			}
+
+		} else {
+			foreach (array_keys(get_object_vars($data)) as $key) {
+				$transformed = call_user_func($transform, $key);
+
+				$transformedValue = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? self::transformKeys($data->{$key}, $transform) : $data->{$key};
+
+				unset($data->{$key});
+				$data->{$transformed} = $transformedValue;
 			}
 		}
 

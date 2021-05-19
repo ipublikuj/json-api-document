@@ -10,7 +10,6 @@
     "document",
     "ipub",
     "ipublikuj",
-    "framework",
     "tools"
   ],
 
@@ -39,13 +38,19 @@
   "minimum-stability" : "dev",
 
   "require" : {
-    "php" : ">=7.1.0",
-    "ext-json" : "*",
-    "neomerx/json-api" : "^4.0"
+    "php" : ">=7.4.0",
+    "ext-json" : "*"
   },
 
   "require-dev" : {
-    "pds/skeleton" : "~1.0"
+    "mockery/mockery": "^1.4",
+    "ninjify/nunjuck": "^0.3",
+    "ninjify/qa": "^0.12",
+    "pds/skeleton": "~1.0",
+    "phpstan/extension-installer": "^1.1",
+    "phpstan/phpstan": "^0.12",
+    "phpstan/phpstan-deprecation-rules": "^0.12",
+    "phpstan/phpstan-strict-rules": "^0.12"
   },
 
   "autoload" : {

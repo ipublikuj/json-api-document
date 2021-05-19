@@ -3,12 +3,12 @@
 /**
  * RuntimeException.php
  *
- * @copyright      More in license.md
+ * @copyright      More in LICENSE.md
  * @license        https://www.ipublikuj.eu
  * @author         Adam Kadlec https://www.ipublikuj.eu
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Exceptions
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           06.05.18
  */

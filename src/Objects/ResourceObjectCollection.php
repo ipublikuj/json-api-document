@@ -3,12 +3,12 @@
 /**
  * ResourceObjectCollection.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
@@ -17,6 +17,7 @@ namespace IPub\JsonAPIDocument\Objects;
 
 use ArrayIterator;
 use IPub\JsonAPIDocument\Exceptions;
+use SplObjectStorage;
 
 /**
  * Resource objects collection
@@ -29,17 +30,19 @@ use IPub\JsonAPIDocument\Exceptions;
 class ResourceObjectCollection implements IResourceObjectCollection
 {
 
-	/** @var IResourceObject[] */
-	private $stack = [];
+	/** @var SplObjectStorage<IResourceObject, null> */
+	private SplObjectStorage $stack;
 
 	/**
-	 * @param array $resources
+	 * @param mixed[] $resources
 	 *
-	 * @return ResourceObjectCollection
+	 * @return IResourceObjectCollection
+	 *
+	 * @phpstan-return IResourceObjectCollection<int, IResourceObject<string, IStandardObject>>
 	 */
-	public static function create(array $resources)
+	public static function create(array $resources): IResourceObjectCollection
 	{
-		$resources = array_map(function ($resource) {
+		$resources = array_map(function ($resource): IResourceObject {
 			return ($resource instanceof IResourceObject) ? $resource : new ResourceObject($resource);
 		}, $resources);
 
@@ -47,34 +50,55 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	}
 
 	/**
-	 * @param array $resources
+	 * @param mixed[] $resources
 	 */
 	public function __construct(array $resources = [])
 	{
+		$this->stack = new SplObjectStorage();
+
 		$this->addMany($resources);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getIterator(): ArrayIterator
+	public function addMany(array $resources): void
 	{
-		return new ArrayIterator($this->stack);
+		foreach ($resources as $resource) {
+			if (!$resource instanceof IResourceObject) {
+				throw new Exceptions\InvalidArgumentException('Expecting only resource objects.');
+			}
+
+			$this->add($resource);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function has(IResourceIdentifier $identifier): bool
+	public function add(IResourceObject $resource): void
 	{
-		/** @var IResourceObject $resource */
-		foreach ($this as $resource) {
-			if ($identifier->isSame($resource->getIdentifier())) {
-				return true;
-			}
+		if (!$this->has($resource)) {
+			$this->stack->attach($resource);
 		}
+	}
 
-		return false;
+	/**
+	 * {@inheritDoc}
+	 */
+	public function has(IResourceObject $resource): bool
+	{
+		return $this->stack->contains($resource);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @phpstan-return ArrayIterator<int, IResourceObject<string, IStandardObject>>
+	 */
+	public function getIterator(): ArrayIterator
+	{
+		return new ArrayIterator($this->getAll());
 	}
 
 	/**
@@ -82,9 +106,7 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 */
 	public function get(IResourceIdentifier $identifier): IResourceObject
 	{
-		/** @var IResourceObject $resource */
-		foreach ($this as $resource) {
-
+		foreach ($this->getAll() as $resource) {
 			if ($identifier->isSame($resource->getIdentifier())) {
 				return $resource;
 			}
@@ -98,7 +120,7 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 */
 	public function getAll(): array
 	{
-		return $this->stack;
+		return iterator_to_array($this->stack);
 	}
 
 	/**
@@ -106,10 +128,9 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 */
 	public function getIdentifiers(): IResourceIdentifierCollection
 	{
-		$collection = new ResourceIdentifierCollection;
+		$collection = new ResourceIdentifierCollection();
 
-		/** @var IResourceObject $resource */
-		foreach ($this as $resource) {
+		foreach ($this->getAll() as $resource) {
 			$collection->add($resource->getIdentifier());
 		}
 
@@ -121,7 +142,7 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 */
 	public function isEmpty(): bool
 	{
-		return $this->stack === [];
+		return $this->stack->count() === 0;
 	}
 
 	/**
@@ -129,35 +150,7 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	 */
 	public function count(): int
 	{
-		return count($this->stack);
-	}
-
-	/**
-	 * @param IResourceObject $resource
-	 *
-	 * @return void
-	 */
-	public function add(IResourceObject $resource): void
-	{
-		if (!$this->has($resource->getIdentifier())) {
-			$this->stack[] = $resource;
-		}
-	}
-
-	/**
-	 * @param array $resources
-	 *
-	 * @return void
-	 */
-	public function addMany(array $resources): void
-	{
-		foreach ($resources as $resource) {
-			if (!$resource instanceof IResourceObject) {
-				throw new Exceptions\InvalidArgumentException('Expecting only resource objects.');
-			}
-
-			$this->add($resource);
-		}
+		return $this->stack->count();
 	}
 
 }

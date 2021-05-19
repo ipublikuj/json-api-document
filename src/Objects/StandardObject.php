@@ -3,12 +3,12 @@
 /**
  * StandardObject.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           17.03.20
  */
@@ -20,11 +20,14 @@ use OutOfBoundsException;
 use stdClass;
 use Traversable;
 
+/**
+ * @phpstan-implements IteratorAggregate<mixed, mixed|IStandardObject>
+ */
 class StandardObject implements IteratorAggregate, IStandardObject
 {
 
 	/** @var stdClass */
-	protected $proxy;
+	protected stdClass $proxy;
 
 	public function __construct(?stdClass $proxy = null)
 	{
@@ -42,7 +45,7 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getProperties(...$keys): array
+	public function getMany(...$keys): array
 	{
 		$values = [];
 
@@ -51,22 +54,6 @@ class StandardObject implements IteratorAggregate, IStandardObject
 		}
 
 		return $values;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getMany(...$keys): array
-	{
-		$ret = [];
-
-		foreach ($this->normalizeKeys($keys) as $key) {
-			if ($this->has($key)) {
-				$ret[$key] = $this->proxy->{$key};
-			}
-		}
-
-		return $ret;
 	}
 
 	/**
@@ -82,7 +69,7 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setProperties(array $values): IStandardObject
+	public function setMany(array $values): IStandardObject
 	{
 		foreach ($values as $key => $value) {
 			$this->set($key, $value);
@@ -94,34 +81,10 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function add(string $key, $value): IStandardObject
+	public function has(string $key): bool
 	{
-		if (!$this->has($key)) {
-			$this->set($key, $value);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function addProperties(array $values): IStandardObject
-	{
-		foreach ($values as $key => $value) {
-			$this->add($key, $value);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function has(...$keys): bool
-	{
-		foreach ($this->normalizeKeys($keys) as $key) {
-			if (!property_exists($this->proxy, $key)) {
+		foreach ($this->normalizeKeys([$key]) as $normalizedKey) {
+			if (!property_exists($this->proxy, $normalizedKey)) {
 				return false;
 			}
 		}
@@ -141,6 +104,22 @@ class StandardObject implements IteratorAggregate, IStandardObject
 		}
 
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function keys(): array
+	{
+		return array_keys(get_object_vars($this->proxy));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function copy(): IStandardObject
+	{
+		return clone $this;
 	}
 
 	/**
@@ -174,26 +153,11 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function copy(): IStandardObject
-	{
-		return clone $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function keys(): array
-	{
-		return array_keys(get_object_vars($this->proxy));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function rename(string $currentKey, string $newKey): IStandardObject
 	{
 		if ($this->has($currentKey)) {
-			$this->set($newKey, $this->proxy->{$currentKey})->remove($currentKey);
+			$this->set($newKey, $this->proxy->{$currentKey});
+			$this->remove($currentKey);
 		}
 
 		return $this;
@@ -241,14 +205,6 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
-	{
-		return Obj::toArray($this->proxy);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function toStdClass(): stdClass
 	{
 		return Obj::replicate($this->proxy);
@@ -257,19 +213,35 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function jsonSerialize()
+	public function toArray(): array
+	{
+		return Obj::toArray($this->proxy);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function jsonSerialize(): stdClass
 	{
 		return $this->proxy;
 	}
 
 	/**
-	 * @param mixed[] $keys
+	 * {@inheritDoc}
 	 *
-	 * @return string[]
+	 * @phpstan-return Traversable<string, mixed>
 	 */
-	protected function normalizeKeys(array $keys): array
+	public function getIterator(): Traversable
 	{
-		return ($keys !== [] && is_array($keys[0])) ? (array) $keys[0] : $keys;
+		return Obj::traverse($this->proxy);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function count(): int
+	{
+		return count($this->toArray());
 	}
 
 	/**
@@ -285,7 +257,7 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	 *
 	 * @return mixed
 	 */
-	public function __get($key)
+	public function __get(string $key)
 	{
 		if (!$this->has($key)) {
 			throw new OutOfBoundsException(sprintf('Key "%s" does not exist.', $key));
@@ -300,7 +272,7 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	 *
 	 * @return void
 	 */
-	public function __set($key, $value): void
+	public function __set(string $key, $value): void
 	{
 		$this->set($key, $value);
 	}
@@ -310,7 +282,7 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	 *
 	 * @return bool
 	 */
-	public function __isset($key)
+	public function __isset(string $key): bool
 	{
 		return $this->has($key);
 	}
@@ -318,25 +290,19 @@ class StandardObject implements IteratorAggregate, IStandardObject
 	/**
 	 * @param string $key
 	 */
-	public function __unset($key)
+	public function __unset(string $key)
 	{
 		$this->remove($key);
 	}
 
 	/**
-	 * @return Traversable
+	 * @param mixed[] $keys
+	 *
+	 * @return string[]
 	 */
-	public function getIterator(): Traversable
+	protected function normalizeKeys(array $keys): array
 	{
-		return Obj::traverse($this->proxy);
-	}
-
-	/**
-	 * @return int
-	 */
-	public function count()
-	{
-		return count($this->toArray());
+		return ($keys !== [] && is_array($keys[0])) ? $keys[0] : $keys;
 	}
 
 }

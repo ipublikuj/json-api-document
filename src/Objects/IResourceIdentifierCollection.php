@@ -3,17 +3,20 @@
 /**
  * IResourceIdentifierCollection.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
 
 namespace IPub\JsonAPIDocument\Objects;
+
+use Countable;
+use IteratorAggregate;
 
 /**
  * Resource identifiers collection interface
@@ -22,9 +25,25 @@ namespace IPub\JsonAPIDocument\Objects;
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ *
+ * @extends IteratorAggregate<int, IResourceIdentifier>
  */
-interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
+interface IResourceIdentifierCollection extends IteratorAggregate, Countable
 {
+
+	/**
+	 * @param mixed[] $identifiers
+	 *
+	 * @return void
+	 */
+	public function addMany(array $identifiers): void;
+
+	/**
+	 * @param IResourceIdentifier $identifier
+	 *
+	 * @return void
+	 */
+	public function add(IResourceIdentifier $identifier): void;
 
 	/**
 	 * Does the collection contain the supplied identifier?
@@ -34,6 +53,18 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	 * @return bool
 	 */
 	public function has(IResourceIdentifier $identifier): bool;
+
+	/**
+	 * @param mixed[] $identifiers
+	 *
+	 * @return void
+	 */
+	public function setAll(array $identifiers): void;
+
+	/**
+	 * @return void
+	 */
+	public function clear(): void;
 
 	/**
 	 * Get the collection as an array
@@ -50,13 +81,6 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	public function isEmpty(): bool;
 
 	/**
-	 * Is every identifier in the collection complete?
-	 *
-	 * @return bool
-	 */
-	public function isComplete(): bool;
-
-	/**
 	 * Does every identifier in the collection match the supplied type/any of the supplied types?
 	 *
 	 * @param string|string[] $typeOrTypes
@@ -64,13 +88,6 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	 * @return bool
 	 */
 	public function isOnly($typeOrTypes): bool;
-
-	/**
-	 * Get an array of the ids of each identifier in the collection
-	 *
-	 * @return string[]
-	 */
-	public function getIds(): array;
 
 	/**
 	 * Map the collection to an array of type keys and id values
@@ -109,5 +126,12 @@ interface IResourceIdentifierCollection extends \IteratorAggregate, \Countable
 	 * @return mixed
 	 */
 	public function map(?array $typeMap = null);
+
+	/**
+	 * Get an array of the ids of each identifier in the collection
+	 *
+	 * @return string[]
+	 */
+	public function getIds(): array;
 
 }

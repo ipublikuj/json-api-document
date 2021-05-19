@@ -3,20 +3,20 @@
 /**
  * ResourceObject.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
+use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
-use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 
 /**
  * Resource object
@@ -45,7 +45,7 @@ class ResourceObject extends StandardObject implements IResourceObject
 	 */
 	public function getAttributes(): IStandardObject
 	{
-		$attributes = $this->hasAttributes() ? $this->get(DocumentInterface::KEYWORD_ATTRIBUTES) : new StandardObject();
+		$attributes = $this->hasAttributes() ? $this->get(JsonAPIDocument\IDocument::KEYWORD_ATTRIBUTES) : new StandardObject();
 
 		if (!$attributes instanceof IStandardObject) {
 			throw new Exceptions\RuntimeException('Attributes member is not an object.');
@@ -59,21 +59,35 @@ class ResourceObject extends StandardObject implements IResourceObject
 	 */
 	public function hasAttributes(): bool
 	{
-		return $this->has(DocumentInterface::KEYWORD_ATTRIBUTES);
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ATTRIBUTES);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getRelationships(): IRelationships
+	public function getRelationship(string $key): ?IRelationship
 	{
-		$relationships = $this->hasRelationships() ? $this->{DocumentInterface::KEYWORD_RELATIONSHIPS} : null;
+		$relationships = $this->getRelationships();
 
-		if (!is_null($relationships) && !is_object($relationships)) {
-			throw new Exceptions\RuntimeException('Relationships member is not an object.');
+		return $relationships->has($key) ? $relationships->getRelationship($key) : null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getRelationships(): IRelationshipCollection
+	{
+		if (!$this->hasRelationships()) {
+			throw new Exceptions\RuntimeException('Relationships member is not present.');
 		}
 
-		return new Relationships($relationships);
+		$relationships = $this->get(JsonAPIDocument\IDocument::KEYWORD_RELATIONSHIPS);
+
+		if (!$relationships instanceof IStandardObject) {
+			throw new Exceptions\RuntimeException('Relationships member is not an array.');
+		}
+
+		return RelationshipCollection::create($relationships);
 	}
 
 	/**
@@ -81,17 +95,7 @@ class ResourceObject extends StandardObject implements IResourceObject
 	 */
 	public function hasRelationships(): bool
 	{
-		return $this->has(DocumentInterface::KEYWORD_RELATIONSHIPS);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getRelationship(string $key): IRelationship
-	{
-		$relationships = $this->getRelationships();
-
-		return $relationships->has($key) ? $relationships->getRelationship($key) : null;
+		return $this->has(JsonAPIDocument\IDocument::KEYWORD_RELATIONSHIPS);
 	}
 
 }

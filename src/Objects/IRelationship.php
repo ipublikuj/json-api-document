@@ -3,12 +3,12 @@
 /**
  * IRelationship.php
  *
- * @license        More in license.md
+ * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          1.0.0
+ * @since          0.0.1
  *
  * @date           05.05.18
  */
@@ -41,20 +41,11 @@ interface IRelationship extends IStandardObject, IMetaMember
 	public function getData();
 
 	/**
-	 * Get the data member as a resource identifier (has-one relationship)
-	 *
-	 * @return IResourceIdentifier
-	 *
-	 * @throws Exceptions\RuntimeException if the data member is not a resource identifier
-	 */
-	public function getIdentifier(): ?IResourceIdentifier;
-
-	/**
-	 * Is the data member a resource identifier?
+	 * Is this a has-many relationship?
 	 *
 	 * @return bool
 	 */
-	public function hasIdentifier(): bool;
+	public function isHasMany(): bool;
 
 	/**
 	 * Is this a has-one relationship?
@@ -73,10 +64,19 @@ interface IRelationship extends IStandardObject, IMetaMember
 	public function getIdentifiers(): IResourceIdentifierCollection;
 
 	/**
-	 * Is this a has-many relationship?
+	 * Get the data member as a resource identifier (has-one relationship)
+	 *
+	 * @return IResourceIdentifier
+	 *
+	 * @throws Exceptions\RuntimeException if the data member is not a resource identifier
+	 */
+	public function getIdentifier(): ?IResourceIdentifier;
+
+	/**
+	 * Is the data member a resource identifier?
 	 *
 	 * @return bool
 	 */
-	public function isHasMany(): bool;
+	public function hasIdentifier(): bool;
 
 }
