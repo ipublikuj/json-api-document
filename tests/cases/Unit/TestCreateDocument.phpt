@@ -62,6 +62,25 @@ class TestCreateDocument extends BaseMockeryTestCase
 		Assert::type(Objects\IResourceObjectCollection::class, $resources);
 
 		Assert::same(1, $resources->count());
+
+		foreach ($resources as $resource) {
+			Assert::type(Objects\IResourceObject::class, $resource);
+		}
+	}
+
+	public function testReadErrorDocument(): void
+	{
+		$document = new JsonAPIDocument\Document(json_decode(file_get_contents(__DIR__ . '/../../fixtures/error.json')));
+
+		$errors = $document->getErrors();
+
+		Assert::type(Objects\IErrorObjectCollection::class, $errors);
+
+		Assert::same(1, $errors->count());
+
+		foreach ($errors as $error) {
+			Assert::type(Objects\IErrorObject::class, $error);
+		}
 	}
 
 }
