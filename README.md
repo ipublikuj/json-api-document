@@ -20,7 +20,7 @@ $ composer require ipub/json-api-document
 
 ## Documentation
 
-Learn how to create document and handle it in [documentation](https://github.com/iPublikuj/doctrine-orm-query/blob/master/docs/en/index.md).
+Learn how to create document and handle it in [documentation](https://github.com/iPublikuj/json-api-document/blob/master/docs/en/index.md).
 
 ***
 Homepage [https://www.ipublikuj.eu](https://www.ipublikuj.eu) and repository [http://github.com/iPublikuj/json-api-document](http://github.com/iPublikuj/json-api-document).
