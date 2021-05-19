@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ResourceObjectCollection.php
+ * ErrorObjectCollection.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -21,31 +21,31 @@ use IPub\JsonAPIDocument\Objects;
 use Traversable;
 
 /**
- * Resource object collection
+ * Error object collection
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-class ResourceObjectCollection implements IResourceObjectCollection
+class ErrorObjectCollection implements IErrorObjectCollection
 {
 
-	/** @var Array<int, IResourceObject> */
+	/** @var Array<int, IErrorObject> */
 	private array $stack = [];
 
 	/**
-	 * @param mixed[] $resourceArray
+	 * @param mixed[] $errorArray
 	 *
-	 * @return IResourceObjectCollection<int, IResourceObject>
+	 * @return IErrorObjectCollection<int, IErrorObject>
 	 */
-	public static function create(array $resourceArray): IResourceObjectCollection
+	public static function create(array $errorArray): IErrorObjectCollection
 	{
 		$data = [];
 
-		foreach ($resourceArray as $resource) {
-			if ($resource instanceof Objects\IStandardObject) {
-				$data[] = new ResourceObject($resource);
+		foreach ($errorArray as $error) {
+			if ($error instanceof Objects\IStandardObject) {
+				$data[] = new ErrorObject($error);
 			}
 		}
 
@@ -53,21 +53,21 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	}
 
 	/**
-	 * @param mixed[] $resource
+	 * @param mixed[] $error
 	 */
-	public function __construct(array $resource = [])
+	public function __construct(array $error = [])
 	{
-		$this->addMany($resource);
+		$this->addMany($error);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addMany(array $resource): void
+	public function addMany(array $error): void
 	{
-		foreach ($resource as $key => $item) {
-			if (!$item instanceof IResourceObject) {
-				throw new Exceptions\InvalidArgumentException('Expecting only resource objects with keys.');
+		foreach ($error as $item) {
+			if (!$item instanceof IErrorObject) {
+				throw new Exceptions\InvalidArgumentException('Expecting only error objects with keys.');
 			}
 
 			$this->add($item);
@@ -77,25 +77,25 @@ class ResourceObjectCollection implements IResourceObjectCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function add(IResourceObject $resource): void
+	public function add(IErrorObject $error): void
 	{
-		if (!$this->has($resource)) {
-			$this->stack[] = $resource;
+		if (!$this->has($error)) {
+			$this->stack[] = $error;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function has(IResourceObject $resource): bool
+	public function has(IErrorObject $error): bool
 	{
-		return in_array($resource, $this->stack, true);
+		return in_array($error, $this->stack, true);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @phpstan-return ArrayIterator<int, IResourceObject>
+	 * @phpstan-return ArrayIterator<int, IErrorObject>
 	 */
 	public function getIterator(): ArrayIterator
 	{

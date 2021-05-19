@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IError.php
+ * IErrorObject.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -23,7 +23,7 @@ namespace IPub\JsonAPIDocument\Objects;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IError
+interface IErrorObject
 {
 
 	/**
@@ -32,9 +32,14 @@ interface IError
 	public function getId(): ?string;
 
 	/**
-	 * @return string[]|null
+	 * @return bool
 	 */
-	public function getLinks(): ?array;
+	public function hasLinks(): bool;
+
+	/**
+	 * @return ILinkObjectCollection
+	 */
+	public function getLinks(): ILinkObjectCollection;
 
 	/**
 	 * @return int|null
@@ -57,8 +62,18 @@ interface IError
 	public function getDetail(): ?string;
 
 	/**
-	 * @return IStandardObject<string, mixed>[]|null
+	 * @return ISourceObject|null
 	 */
-	public function getSource(): ?array;
+	public function getSource(): ?ISourceObject;
+
+	/**
+	 * @return bool
+	 */
+	public function hasMeta(): bool;
+
+	/**
+	 * @return IMetaObjectCollection
+	 */
+	public function getMeta(): IMetaObjectCollection;
 
 }

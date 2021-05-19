@@ -15,6 +15,8 @@
 
 namespace IPub\JsonAPIDocument;
 
+use IPub\JsonAPIDocument\Exceptions\InvalidArgumentException;
+use JsonException;
 use stdClass;
 
 /**
@@ -25,29 +27,34 @@ use stdClass;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-class Document extends Objects\StandardObject implements IDocument
+class Document implements IDocument
 {
 
+	/** @var Objects\IStandardObject */
+	private Objects\IStandardObject $data;
+
 	/**
-	 * {@inheritDoc}
+	 * @param string|stdClass $data
+	 *
+	 * @return IDocument
 	 */
-	public function getData()
+	public static function create($data): IDocument
 	{
-		if (!$this->has(self::KEYWORD_DATA)) {
-			throw new Exceptions\RuntimeException('Data member is not present.');
+		if ($data instanceof stdClass) {
+			return new self($data);
 		}
 
-		$data = $this->get(self::KEYWORD_DATA);
+		try {
+			return new self(json_decode($data));
 
-		if (is_array($data)) {
-			return Objects\StandardObjectCollection::create($data);
+		} catch (JsonException $ex) {
+			throw new InvalidArgumentException('Provided data are not valid string or object');
 		}
+	}
 
-		if (!$data instanceof Objects\IStandardObject && $data !== null) {
-			throw new Exceptions\RuntimeException('Data member is not an object or null.');
-		}
-
-		return $data;
+	public function __construct(stdClass $data)
+	{
+		$this->data = new Objects\StandardObject($data);
 	}
 
 	/**
@@ -65,7 +72,7 @@ class Document extends Objects\StandardObject implements IDocument
 			throw new Exceptions\RuntimeException('Data member is not an object.');
 		}
 
-		return new Objects\ResourceObject($data->toStdClass());
+		return new Objects\ResourceObject($data);
 	}
 
 	/**
@@ -79,24 +86,26 @@ class Document extends Objects\StandardObject implements IDocument
 			throw new Exceptions\RuntimeException('Data member is not an array.');
 		}
 
-		return Objects\ResourceObjectCollection::create(array_map(function (Objects\IStandardObject $resource): stdClass {
-			return $resource->toStdClass();
-		}, $data->getAll()));
+		return Objects\ResourceObjectCollection::create($data->getAll());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getLinks(): ?Objects\IStandardObject
+	public function getData()
 	{
-		if (!$this->has(self::KEYWORD_LINKS)) {
-			return null;
+		if (!$this->data->has(self::KEYWORD_DATA)) {
+			throw new Exceptions\RuntimeException('Data member is not present.');
 		}
 
-		$data = $this->get(self::KEYWORD_LINKS);
+		$data = $this->data->get(self::KEYWORD_DATA);
+
+		if (is_array($data)) {
+			return Objects\StandardObjectCollection::create($data);
+		}
 
 		if (!$data instanceof Objects\IStandardObject && $data !== null) {
-			throw new Exceptions\RuntimeException('Links member is not an object or null.');
+			throw new Exceptions\RuntimeException('Data member is not an object or null.');
 		}
 
 		return $data;
@@ -105,55 +114,91 @@ class Document extends Objects\StandardObject implements IDocument
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getMeta(): ?Objects\IStandardObject
+	public function hasLinks(): bool
 	{
-		if (!$this->has(self::KEYWORD_META)) {
-			return null;
-		}
-
-		$data = $this->get(self::KEYWORD_META);
-
-		if (!$data instanceof Objects\IStandardObject && $data !== null) {
-			throw new Exceptions\RuntimeException('Meta member is not an object or null.');
-		}
-
-		return $data;
+		return $this->data->has(self::KEYWORD_LINKS);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getIncluded(): ?Objects\IResourceObjectCollection
+	public function getLinks(): Objects\ILinkObjectCollection
 	{
-		if (!$this->has(self::KEYWORD_INCLUDED)) {
-			return null;
+		$raw = $this->data->get(self::KEYWORD_LINKS);
+
+		if (!$raw instanceof Objects\IStandardObject && $raw !== null) {
+			throw new Exceptions\RuntimeException('Links member is not an object.');
 		}
 
-		$data = $this->get(self::KEYWORD_INCLUDED);
+		return Objects\LinkObjectCollection::create($raw);
+	}
 
-		if (!is_array($data)) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasMeta(): bool
+	{
+		return $this->data->has(self::KEYWORD_META);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getMeta(): Objects\IMetaObjectCollection
+	{
+		$raw = $this->data->get(self::KEYWORD_META);
+
+		if (!$raw instanceof Objects\IStandardObject && $raw !== null) {
+			throw new Exceptions\RuntimeException('Meta member is not an object.');
+		}
+
+		return Objects\MetaObjectCollection::create($raw);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasIncluded(): bool
+	{
+		return $this->data->has(self::KEYWORD_INCLUDED);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getIncluded(): Objects\IResourceObjectCollection
+	{
+		$raw = $this->data->get(self::KEYWORD_INCLUDED);
+
+		if (!is_array($raw)) {
 			throw new Exceptions\RuntimeException('Included member is not an array.');
 		}
 
-		return Objects\ResourceObjectCollection::create($data);
+		return Objects\ResourceObjectCollection::create(Objects\StandardObjectCollection::create($raw)
+			->getAll());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getErrors(): ?Objects\IErrorCollection
+	public function hasErrors(): bool
 	{
-		if (!$this->has(self::KEYWORD_ERRORS)) {
-			return null;
-		}
+		return $this->data->has(self::KEYWORD_ERRORS);
+	}
 
-		$data = $this->get(self::KEYWORD_ERRORS);
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getErrors(): Objects\IErrorObjectCollection
+	{
+		$raw = $this->data->get(self::KEYWORD_ERRORS);
 
-		if (!is_array($data)) {
+		if (!is_array($raw)) {
 			throw new Exceptions\RuntimeException('Errors member is not an array.');
 		}
 
-		return Objects\ErrorCollection::create($data);
+		return Objects\ErrorObjectCollection::create(Objects\StandardObjectCollection::create($raw)
+			->getAll());
 	}
 
 }

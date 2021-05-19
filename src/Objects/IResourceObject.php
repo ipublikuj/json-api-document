@@ -8,43 +8,35 @@
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          0.0.1
+ * @since          0.2.0
  *
- * @date           05.05.18
+ * @date           19.05.21
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
-use IPub\JsonAPIDocument\Exceptions;
+use IPub\JsonAPIDocument\Objects;
 
 /**
- * Resource object interface
+ * Resource interface
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IResourceObject extends IStandardObject, IIdentifiable, IMetaMember
+interface IResourceObject
 {
 
 	/**
-	 * Get the type and id members as a resource identifier object
-	 *
-	 * @return IResourceIdentifier
-	 *
-	 * @throws Exceptions\RuntimeException if the type and/or id members are not valid
+	 * @return string
 	 */
-	public function getIdentifier(): IResourceIdentifier;
+	public function getId(): string;
 
 	/**
-	 * @return IStandardObject
-	 *
-	 * @throws Exceptions\RuntimeException if the attributes member is present and is not an object
-	 *
-	 * @phpstan-return IStandardObject<string, mixed>
+	 * @return string
 	 */
-	public function getAttributes(): IStandardObject;
+	public function getType(): string;
 
 	/**
 	 * @return bool
@@ -52,30 +44,38 @@ interface IResourceObject extends IStandardObject, IIdentifiable, IMetaMember
 	public function hasAttributes(): bool;
 
 	/**
-	 * Get a relationship object by its key
-	 *
-	 * @param string $key
-	 *
-	 * @return IRelationship|null the relationship object or null if it is not present
-	 *
-	 * @throws Exceptions\RuntimeException
-	 *
-	 * @phpstan-return IRelationship<string, IStandardObject>
+	 * @return Objects\IStandardObject
 	 */
-	public function getRelationship(string $key): ?IRelationship;
-
-	/**
-	 * @return IRelationshipCollection
-	 *
-	 * @throws Exceptions\RuntimeException if the relationships member is not present or is not an object
-	 *
-	 * @phpstan-return IRelationshipCollection<IRelationship<string, IStandardObject>>
-	 */
-	public function getRelationships(): IRelationshipCollection;
+	public function getAttributes(): Objects\IStandardObject;
 
 	/**
 	 * @return bool
 	 */
 	public function hasRelationships(): bool;
+
+	/**
+	 * @return IRelationshipObjectCollection
+	 */
+	public function getRelationships(): IRelationshipObjectCollection;
+
+	/**
+	 * @return bool
+	 */
+	public function hasLinks(): bool;
+
+	/**
+	 * @return ILinkObjectCollection
+	 */
+	public function getLinks(): ILinkObjectCollection;
+
+	/**
+	 * @return bool
+	 */
+	public function hasMeta(): bool;
+
+	/**
+	 * @return IMetaObjectCollection
+	 */
+	public function getMeta(): IMetaObjectCollection;
 
 }

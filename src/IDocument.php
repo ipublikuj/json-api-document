@@ -23,7 +23,7 @@ namespace IPub\JsonAPIDocument;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IDocument extends Objects\IStandardObject
+interface IDocument
 {
 
 	// Reserved keyword
@@ -113,68 +113,68 @@ interface IDocument extends Objects\IStandardObject
 	// Reserved keyword
 	public const KEYWORD_ERRORS_ABOUT = 'about';
 
+	// Reserved keyword
+	public const KEYWORD_POINTER = 'pointer';
+
+	// Reserved keyword
+	public const KEYWORD_PARAMETER = 'parameter';
+
 	// Include path separator
 	public const PATH_SEPARATOR = '.';
 
 	/**
-	 * Get the data member of the document as a standard object or array
-	 *
-	 * @return Objects\IStandardObject|Objects\IStandardObjectCollection|null
-	 *
-	 * @throws Exceptions\RuntimeException if the data member is not present, or is not an object, array or null
-	 */
-	public function getData();
-
-	/**
-	 * Get the data single member of the document as a resource object
-	 *
 	 * @return Objects\IResourceObject|null
-	 *
-	 * @throws Exceptions\RuntimeException if the data member is not present, or is not an object or null
 	 */
 	public function getResource(): ?Objects\IResourceObject;
 
 	/**
-	 * Get the data members of the document as a resource object collection
-	 *
-	 * @return Objects\IResourceObjectCollection
-	 *
-	 * @throws Exceptions\RuntimeException if the data member is not present, or is not an array
+	 * @return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
 	 */
 	public function getResources(): Objects\IResourceObjectCollection;
 
 	/**
-	 * Get the links member of the document as a standard object
-	 *
-	 * @return Objects\IStandardObject|null
-	 *
-	 * @throws Exceptions\RuntimeException if the links member is not an object or null
+	 * @return Objects\IStandardObject|Objects\IStandardObjectCollection<int, Objects\IStandardObject>|null
 	 */
-	public function getLinks(): ?Objects\IStandardObject;
+	public function getData();
 
 	/**
-	 * Get the meta member of the document as a standard object
-	 *
-	 * @return Objects\IStandardObject|null
-	 *
-	 * @throws Exceptions\RuntimeException if the meta member is not an object or null
+	 * @return bool
 	 */
-	public function getMeta(): ?Objects\IStandardObject;
+	public function hasLinks(): bool;
 
 	/**
-	 * Get the included member as a resource object collection
-	 *
-	 * @return Objects\IResourceObjectCollection|null the resources or null if the included member is not present
-	 *
-	 * @throws Exceptions\RuntimeException if the included member is not an array
+	 * @return Objects\ILinkObjectCollection<string, Objects\ILinkObject|string>
 	 */
-	public function getIncluded(): ?Objects\IResourceObjectCollection;
+	public function getLinks(): Objects\ILinkObjectCollection;
 
 	/**
-	 * Get the errors member as an error collection.
-	 *
-	 * @return Objects\IErrorCollection|null the errors or null if the error member is not present
+	 * @return bool
 	 */
-	public function getErrors(): ?Objects\IErrorCollection;
+	public function hasMeta(): bool;
+
+	/**
+	 * @return Objects\IMetaObjectCollection<string, Objects\IMetaObject>
+	 */
+	public function getMeta(): Objects\IMetaObjectCollection;
+
+	/**
+	 * @return bool
+	 */
+	public function hasIncluded(): bool;
+
+	/**
+	 * @return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
+	 */
+	public function getIncluded(): Objects\IResourceObjectCollection;
+
+	/**
+	 * @return bool
+	 */
+	public function hasErrors(): bool;
+
+	/**
+	 * @return Objects\IErrorObjectCollection<int, Objects\IErrorObject>
+	 */
+	public function getErrors(): Objects\IErrorObjectCollection;
 
 }

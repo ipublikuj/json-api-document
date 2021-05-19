@@ -1,47 +1,44 @@
 <?php declare(strict_types = 1);
 
 /**
- * IMetaMember.php
+ * ILinkObject.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          0.0.1
+ * @since          0.2.0
  *
- * @date           05.05.18
+ * @date           19.05.21
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
-use IPub\JsonAPIDocument\Exceptions;
-
 /**
- * Meta member interface
+ * Link value interface
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IMetaMember
+interface ILinkObject
 {
 
 	/**
-	 * Get the meta member of the object
-	 *
-	 * @return IStandardObject
-	 *
-	 * @throws Exceptions\RuntimeException if the meta member is present and is not an object
+	 * @return string
 	 */
-	public function getMeta(): IStandardObject;
+	public function getHref(): string;
 
 	/**
-	 * Does the object have meta?
-	 *
 	 * @return bool
 	 */
 	public function hasMeta(): bool;
+
+	/**
+	 * @return IMetaObjectCollection<string, IMetaObject>
+	 */
+	public function getMeta(): IMetaObjectCollection;
 
 }

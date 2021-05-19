@@ -26,7 +26,7 @@ use IteratorAggregate;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IResourceIdentifier>
+ * @extends IteratorAggregate<int, IResourceIdentifierObject>
  */
 interface IResourceIdentifierCollection extends IteratorAggregate, Countable
 {
@@ -39,37 +39,25 @@ interface IResourceIdentifierCollection extends IteratorAggregate, Countable
 	public function addMany(array $identifiers): void;
 
 	/**
-	 * @param IResourceIdentifier $identifier
+	 * @param IResourceIdentifierObject $identifier
 	 *
 	 * @return void
 	 */
-	public function add(IResourceIdentifier $identifier): void;
+	public function add(IResourceIdentifierObject $identifier): void;
 
 	/**
 	 * Does the collection contain the supplied identifier?
 	 *
-	 * @param IResourceIdentifier $identifier
+	 * @param IResourceIdentifierObject $identifier
 	 *
 	 * @return bool
 	 */
-	public function has(IResourceIdentifier $identifier): bool;
-
-	/**
-	 * @param mixed[] $identifiers
-	 *
-	 * @return void
-	 */
-	public function setAll(array $identifiers): void;
-
-	/**
-	 * @return void
-	 */
-	public function clear(): void;
+	public function has(IResourceIdentifierObject $identifier): bool;
 
 	/**
 	 * Get the collection as an array
 	 *
-	 * @return IResourceIdentifier[]
+	 * @return IResourceIdentifierObject[]
 	 */
 	public function getAll(): array;
 

@@ -27,7 +27,7 @@ class Obj
 	 * @param string $key
 	 * @param mixed $default
 	 *
-	 * @return IStandardObject|mixed
+	 * @return string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null
 	 */
 	public static function get($data, string $key, $default = null)
 	{
@@ -41,17 +41,30 @@ class Obj
 
 		$value = $data->{$key};
 
-		return $value instanceof IStandardObject || $value instanceof stdClass ? static::cast($value) : $value;
+		if ($value instanceof IStandardObject || $value instanceof stdClass) {
+			return static::cast($value);
+
+		} elseif (is_array($value)) {
+			$mapped = [];
+
+			foreach ($value as $fieldKey => $field) {
+				$mapped[$fieldKey] = $field instanceof IStandardObject || $field instanceof stdClass ? static::cast($field) : $field;
+			}
+
+			return $mapped;
+		}
+
+		return (string) $value;
 	}
 
 	/**
-	 * @param IStandardObject|stdClass|null $data
+	 * @param IStandardObject|stdClass $data
 	 *
-	 * @return IStandardObject
+	 * @return IStandardObject<string, string|int|float|mixed[]|null>
 	 */
-	public static function cast($data): ?IStandardObject
+	public static function cast($data): IStandardObject
 	{
-		return ($data instanceof IStandardObject) ? $data : new StandardObject($data);
+		return $data instanceof IStandardObject ? $data : new StandardObject($data);
 	}
 
 	/**
@@ -77,7 +90,7 @@ class Obj
 	 *
 	 * @return Traversable
 	 *
-	 * @phpstan-return Traversable<mixed, mixed>
+	 * @phpstan-return Traversable<string, string|int|float|mixed[]|IStandardObject|null>
 	 */
 	public static function traverse($data): Traversable
 	{
@@ -88,12 +101,12 @@ class Obj
 
 		if (is_array($data)) {
 			foreach ($data as $key => $value) {
-				yield $key => $value instanceof stdClass ? static::cast($value) : $value;
+				yield $key => $value instanceof stdClass ? static::cast($value) : ($value === null ? null : (string) $value);
 			}
 
 		} else {
 			foreach (array_keys(get_object_vars($data)) as $key) {
-				yield $key => $data->{$key} instanceof stdClass ? static::cast($data->{$key}) : $data->{$key};
+				yield $key => $data->{$key} instanceof stdClass ? static::cast($data->{$key}) : ($data->{$key} === null ? null : (string) $data->{$key});
 			}
 		}
 	}
@@ -101,7 +114,7 @@ class Obj
 	/**
 	 * @param stdClass|mixed[] $data
 	 *
-	 * @return mixed[]
+	 * @return Array<string, string|int|float|mixed[]|null>
 	 */
 	public static function toArray($data): array
 	{
@@ -114,53 +127,16 @@ class Obj
 
 		if (is_array($data)) {
 			foreach ($data as $key => $value) {
-				$arr[$key] = ($value instanceof stdClass || is_array($value)) ? static::toArray($value) : $value;
+				$arr[$key] = ($value instanceof stdClass || is_array($value)) ? static::toArray($value) : ($value === null ? null : (string) $value);
 			}
 
 		} else {
 			foreach (array_keys(get_object_vars($data)) as $key) {
-				$arr[$key] = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? static::toArray($data->{$key}) : $data->{$key};
+				$arr[$key] = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? static::toArray($data->{$key}) : ($data->{$key} === null ? null : (string) $data->{$key});
 			}
 		}
 
 		return $arr;
-	}
-
-	/**
-	 * @param stdClass|mixed[] $data
-	 * @param callable $transform
-	 *
-	 * @return mixed[]|stdClass
-	 */
-	public static function transformKeys($data, callable $transform)
-	{
-		/** @phpstan-ignore-next-line */
-		if (!$data instanceof stdClass && !is_array($data)) {
-			throw new Exceptions\InvalidArgumentException('Expecting an object or array to transform keys.');
-		}
-
-		if (is_array($data)) {
-			foreach ($data as $key => $value) {
-				$transformed = call_user_func($transform, $key);
-
-				$transformedValue = ($value instanceof stdClass || is_array($value)) ? self::transformKeys($value, $transform) : $value;
-
-				unset($data[$key]);
-				$data[$transformed] = $transformedValue;
-			}
-
-		} else {
-			foreach (array_keys(get_object_vars($data)) as $key) {
-				$transformed = call_user_func($transform, $key);
-
-				$transformedValue = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? self::transformKeys($data->{$key}, $transform) : $data->{$key};
-
-				unset($data->{$key});
-				$data->{$transformed} = $transformedValue;
-			}
-		}
-
-		return $data;
 	}
 
 }

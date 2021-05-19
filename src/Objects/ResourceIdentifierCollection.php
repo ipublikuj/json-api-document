@@ -18,6 +18,7 @@ namespace IPub\JsonAPIDocument\Objects;
 use ArrayIterator;
 use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
+use IPub\JsonAPIDocument\Objects;
 
 /**
  * Resource identifier object
@@ -30,13 +31,13 @@ use IPub\JsonAPIDocument\Exceptions;
 class ResourceIdentifierCollection implements IResourceIdentifierCollection
 {
 
-	/** @var IResourceIdentifier[] */
+	/** @var IResourceIdentifierObject[] */
 	private array $stack;
 
 	/**
 	 * @param mixed[] $input
 	 *
-	 * @return IResourceIdentifierCollection
+	 * @return IResourceIdentifierCollection<int, IResourceIdentifierObject>
 	 */
 	public static function create(array $input): IResourceIdentifierCollection
 	{
@@ -44,18 +45,13 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 
 		foreach ($input as $value) {
 			if (
-				$value instanceof IStandardObject
+				$value instanceof Objects\IStandardObject
 				&& $value->has(JsonAPIDocument\IDocument::KEYWORD_TYPE)
 				&& $value->has(JsonAPIDocument\IDocument::KEYWORD_ID)
 				&& is_string($value->get(JsonAPIDocument\IDocument::KEYWORD_TYPE))
 				&& is_string($value->get(JsonAPIDocument\IDocument::KEYWORD_ID))
 			) {
-				$collection->add(
-					new ResourceIdentifier(
-						$value->get(JsonAPIDocument\IDocument::KEYWORD_TYPE),
-						$value->get(JsonAPIDocument\IDocument::KEYWORD_ID)
-					)
-				);
+				$collection->add(new ResourceIdentifierObject($value));
 			}
 		}
 
@@ -78,8 +74,8 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	public function addMany(array $identifiers): void
 	{
 		foreach ($identifiers as $identifier) {
-			if (!$identifier instanceof IResourceIdentifier) {
-				throw new Exceptions\InvalidArgumentException('Expecting only identifier objects.');
+			if (!$identifier instanceof IResourceIdentifierObject) {
+				throw new Exceptions\InvalidArgumentException('Expecting only resource identifier objects.');
 			}
 
 			$this->add($identifier);
@@ -89,7 +85,7 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function add(IResourceIdentifier $identifier): void
+	public function add(IResourceIdentifierObject $identifier): void
 	{
 		if (!$this->has($identifier)) {
 			$this->stack[] = $identifier;
@@ -99,33 +95,15 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function has(IResourceIdentifier $identifier): bool
+	public function has(IResourceIdentifierObject $identifier): bool
 	{
 		return in_array($identifier, $this->stack, true);
 	}
 
 	/**
 	 * {@inheritDoc}
-	 */
-	public function setAll(array $identifiers): void
-	{
-		$this->clear();
-
-		$this->addMany($identifiers);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function clear(): void
-	{
-		$this->stack = [];
-	}
-
-	/**
-	 * {@inheritDoc}
 	 *
-	 * @phpstan-return ArrayIterator<int, IResourceIdentifier>
+	 * @phpstan-return ArrayIterator<int, IResourceIdentifierObject>
 	 */
 	public function getIterator(): ArrayIterator
 	{

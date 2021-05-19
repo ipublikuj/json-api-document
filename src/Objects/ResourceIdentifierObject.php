@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ResourceIdentifier.php
+ * ResourceIdentifierObject.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -15,6 +15,7 @@
 
 namespace IPub\JsonAPIDocument\Objects;
 
+use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
 
 /**
@@ -25,7 +26,7 @@ use IPub\JsonAPIDocument\Exceptions;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-class ResourceIdentifier implements IResourceIdentifier
+class ResourceIdentifierObject implements IResourceIdentifierObject
 {
 
 	/** @var string */
@@ -34,21 +35,15 @@ class ResourceIdentifier implements IResourceIdentifier
 	/** @var string */
 	private string $id;
 
-	/**
-	 * @param string $type
-	 * @param string $id
-	 *
-	 * @return ResourceIdentifier
-	 */
-	public static function create(string $type, string $id): IResourceIdentifier
+	public function __construct(IStandardObject $data)
 	{
-		return new self($type, $id);
-	}
+		$type = $data->get(JsonAPIDocument\IDocument::KEYWORD_TYPE);
+		$id = $data->get(JsonAPIDocument\IDocument::KEYWORD_ID);
 
-	public function __construct(
-		string $type,
-		string $id
-	) {
+		if (!is_string($type) || !is_string($id)) {
+			throw new Exceptions\InvalidArgumentException('Data member has invalid format');
+		}
+
 		$this->type = $type;
 		$this->id = $id;
 	}
@@ -74,7 +69,7 @@ class ResourceIdentifier implements IResourceIdentifier
 	 */
 	public function isType($typeOrTypes): bool
 	{
-		return in_array($this->type, (array) $typeOrTypes, true);
+		return in_array($this->type, is_array($typeOrTypes) ? $typeOrTypes : [$typeOrTypes], true);
 	}
 
 	/**
@@ -92,7 +87,7 @@ class ResourceIdentifier implements IResourceIdentifier
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSame(IResourceIdentifier $identifier): bool
+	public function isSame(IResourceIdentifierObject $identifier): bool
 	{
 		return $this->type === $identifier->getType() &&
 			$this->id === $identifier->getId();
@@ -104,6 +99,14 @@ class ResourceIdentifier implements IResourceIdentifier
 	public function toString(): string
 	{
 		return sprintf('%s:%s', $this->type, $this->id);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 
 }

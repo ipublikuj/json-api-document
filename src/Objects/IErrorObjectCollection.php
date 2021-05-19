@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IResourceObjectCollection.php
+ * IErrorObjectCollection.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -20,39 +20,39 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * Resource object collection interface
+ * Error object collection interface
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IResourceObject>
+ * @extends IteratorAggregate<int, IErrorObject>
  */
-interface IResourceObjectCollection extends IteratorAggregate, Countable
+interface IErrorObjectCollection extends IteratorAggregate, Countable
 {
 
 	/**
-	 * @param mixed[] $resource
+	 * @param mixed[] $error
 	 */
-	public function addMany(array $resource): void;
+	public function addMany(array $error): void;
 
 	/**
-	 * @param IResourceObject $resource
+	 * @param IErrorObject $error
 	 *
 	 * @return void
 	 */
-	public function add(IResourceObject $resource): void;
+	public function add(IErrorObject $error): void;
 
 	/**
-	 * @param IResourceObject $resource
+	 * @param IErrorObject $error
 	 *
 	 * @return bool
 	 */
-	public function has(IResourceObject $resource): bool;
+	public function has(IErrorObject $error): bool;
 
 	/**
-	 * @return Traversable<int, IResourceObject>
+	 * @return Traversable<int, IErrorObject>
 	 */
 	public function getAll(): Traversable;
 

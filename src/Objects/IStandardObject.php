@@ -37,29 +37,29 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 * @param string $key
 	 * @param mixed $default
 	 *
-	 * @return mixed|mixed[]|null
+	 * @return string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null
 	 */
 	public function get(string $key, $default = null);
 
 	/**
 	 * @param string|string[] ...$keys
 	 *
-	 * @return Array<string, mixed|mixed[]|null>
+	 * @return Array<string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>>
 	 */
 	public function getMany(...$keys): array;
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null $value
 	 *
-	 * @return IStandardObject<string, mixed>
+	 * @return IStandardObject<string, string|int|float|mixed[]|null>
 	 */
 	public function set(string $key, $value): IStandardObject;
 
 	/**
-	 * @param Array<string, mixed|mixed[]|null> $values
+	 * @param Array<string, string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>> $values
 	 *
-	 * @return IStandardObject<string, mixed>
+	 * @return IStandardObject<string, string|int|float|mixed[]|null>
 	 */
 	public function setMany(array $values): IStandardObject;
 
@@ -83,53 +83,16 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	public function keys(): array;
 
 	/**
-	 * @return IStandardObject<string, mixed>
+	 * @return IStandardObject<string, string|int|float|mixed[]|null>
 	 */
 	public function copy(): IStandardObject;
 
 	/**
 	 * @param string[] ...$key
 	 *
-	 * @return IStandardObject<string, mixed>
+	 * @return IStandardObject<string, string|int|float|mixed[]|null>
 	 */
 	public function remove(...$key): IStandardObject;
-
-	/**
-	 * @param string[] ...$keys
-	 *
-	 * @return IStandardObject<string, mixed>
-	 */
-	public function reduce(...$keys): IStandardObject;
-
-	/**
-	 * @param string $currentKey
-	 * @param string $newKey
-	 *
-	 * @return IStandardObject<string, mixed>
-	 */
-	public function rename(string $currentKey, string $newKey): IStandardObject;
-
-	/**
-	 * @param mixed[] $mapping
-	 *
-	 * @return IStandardObject<string, mixed>
-	 */
-	public function renameKeys(array $mapping): IStandardObject;
-
-	/**
-	 * @param callable $transform
-	 * @param string[] $keys
-	 *
-	 * @return IStandardObject<string, mixed>
-	 */
-	public function transform(callable $transform, ...$keys): IStandardObject;
-
-	/**
-	 * @param callable $transform
-	 *
-	 * @return IStandardObject<string, mixed>
-	 */
-	public function transformKeys(callable $transform): IStandardObject;
 
 	/**
 	 * @return stdClass

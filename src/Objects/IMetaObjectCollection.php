@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IResourceObjectCollection.php
+ * IMetaObjectCollection.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -20,41 +20,56 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * Resource object collection interface
+ * Meta object collection interface
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IResourceObject>
+ * @extends IteratorAggregate<string, IMetaObject>
  */
-interface IResourceObjectCollection extends IteratorAggregate, Countable
+interface IMetaObjectCollection extends IteratorAggregate, Countable
 {
 
 	/**
-	 * @param mixed[] $resource
+	 * @param mixed[] $meta
 	 */
-	public function addMany(array $resource): void;
+	public function addMany(array $meta): void;
 
 	/**
-	 * @param IResourceObject $resource
+	 * @param IMetaObject $meta
+	 * @param string $key
 	 *
 	 * @return void
 	 */
-	public function add(IResourceObject $resource): void;
+	public function add(IMetaObject $meta, string $key): void;
 
 	/**
-	 * @param IResourceObject $resource
+	 * @param string $key
+	 *
+	 * @return IMetaObject|null
+	 */
+	public function get(string $key): ?IMetaObject;
+
+	/**
+	 * @param string $key
 	 *
 	 * @return bool
 	 */
-	public function has(IResourceObject $resource): bool;
+	public function has(string $key): bool;
 
 	/**
-	 * @return Traversable<int, IResourceObject>
+	 * @return Traversable<string, IMetaObject>
 	 */
 	public function getAll(): Traversable;
+
+	/**
+	 * @param string $key
+	 *
+	 * @return IMetaObject
+	 */
+	public function getMeta(string $key): IMetaObject;
 
 	/**
 	 * @return bool

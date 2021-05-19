@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IResourceIdentifier.php
+ * IResourceIdentifierObject.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -25,7 +25,7 @@ use IPub\JsonAPIDocument\Exceptions;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-interface IResourceIdentifier
+interface IResourceIdentifierObject
 {
 
 	/**
@@ -57,11 +57,11 @@ interface IResourceIdentifier
 	public function mapType(array $types): string;
 
 	/**
-	 * @param IResourceIdentifier $identifier
+	 * @param IResourceIdentifierObject $identifier
 	 *
 	 * @return bool
 	 */
-	public function isSame(IResourceIdentifier $identifier): bool;
+	public function isSame(IResourceIdentifierObject $identifier): bool;
 
 	/**
 	 * @return string

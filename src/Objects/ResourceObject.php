@@ -8,50 +8,63 @@
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
- * @since          0.0.1
+ * @since          0.2.0
  *
- * @date           05.05.18
+ * @date           19.05.21
  */
 
 namespace IPub\JsonAPIDocument\Objects;
 
 use IPub\JsonAPIDocument;
 use IPub\JsonAPIDocument\Exceptions;
+use IPub\JsonAPIDocument\Objects;
 
 /**
- * Resource object
+ * Resource
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
-class ResourceObject extends StandardObject implements IResourceObject
+class ResourceObject implements IResourceObject
 {
 
-	use TIdentifiable;
-	use TMetaMember;
+	/** @var Objects\IStandardObject */
+	private Objects\IStandardObject $data;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getIdentifier(): IResourceIdentifier
+	/** @var IResourceIdentifierObject */
+	private IResourceIdentifierObject $identifier;
+
+	public function __construct(Objects\IStandardObject $data)
 	{
-		return ResourceIdentifier::create($this->getType(), $this->getId());
+		if (
+			!$data->has(JsonAPIDocument\IDocument::KEYWORD_ID)
+			|| !is_string($data->get(JsonAPIDocument\IDocument::KEYWORD_ID))
+			|| !$data->has(JsonAPIDocument\IDocument::KEYWORD_TYPE)
+			|| !is_string($data->get(JsonAPIDocument\IDocument::KEYWORD_TYPE))
+		) {
+			throw new Exceptions\InvalidArgumentException('Provided data object is not valid resource');
+		}
+
+		$this->data = $data;
+		$this->identifier = new ResourceIdentifierObject($data);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getAttributes(): IStandardObject
+	public function getId(): string
 	{
-		$attributes = $this->hasAttributes() ? $this->get(JsonAPIDocument\IDocument::KEYWORD_ATTRIBUTES) : new StandardObject();
+		return $this->identifier->getId();
+	}
 
-		if (!$attributes instanceof IStandardObject) {
-			throw new Exceptions\RuntimeException('Attributes member is not an object.');
-		}
-
-		return $attributes;
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getType(): string
+	{
+		return $this->identifier->getType();
 	}
 
 	/**
@@ -59,35 +72,21 @@ class ResourceObject extends StandardObject implements IResourceObject
 	 */
 	public function hasAttributes(): bool
 	{
-		return $this->has(JsonAPIDocument\IDocument::KEYWORD_ATTRIBUTES);
+		return $this->data->has(JsonAPIDocument\IDocument::KEYWORD_ATTRIBUTES);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getRelationship(string $key): ?IRelationship
+	public function getAttributes(): Objects\IStandardObject
 	{
-		$relationships = $this->getRelationships();
+		$data = $this->data->get(JsonAPIDocument\IDocument::KEYWORD_ATTRIBUTES);
 
-		return $relationships->has($key) ? $relationships->getRelationship($key) : null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getRelationships(): IRelationshipCollection
-	{
-		if (!$this->hasRelationships()) {
-			throw new Exceptions\RuntimeException('Relationships member is not present.');
+		if (!$data instanceof Objects\IStandardObject) {
+			throw new Exceptions\RuntimeException('Data member is not an object.');
 		}
 
-		$relationships = $this->get(JsonAPIDocument\IDocument::KEYWORD_RELATIONSHIPS);
-
-		if (!$relationships instanceof IStandardObject) {
-			throw new Exceptions\RuntimeException('Relationships member is not an array.');
-		}
-
-		return RelationshipCollection::create($relationships);
+		return $data;
 	}
 
 	/**
@@ -95,7 +94,65 @@ class ResourceObject extends StandardObject implements IResourceObject
 	 */
 	public function hasRelationships(): bool
 	{
-		return $this->has(JsonAPIDocument\IDocument::KEYWORD_RELATIONSHIPS);
+		return $this->data->has(JsonAPIDocument\IDocument::KEYWORD_RELATIONSHIPS);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getRelationships(): IRelationshipObjectCollection
+	{
+		$raw = $this->data->get(JsonAPIDocument\IDocument::KEYWORD_RELATIONSHIPS);
+
+		if (!$raw instanceof Objects\IStandardObject && $raw !== null) {
+			throw new Exceptions\RuntimeException('Relationships member is not an object.');
+		}
+
+		return RelationshipObjectCollection::create($raw);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasLinks(): bool
+	{
+		return $this->data->has(JsonAPIDocument\IDocument::KEYWORD_LINKS);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getLinks(): ILinkObjectCollection
+	{
+		$raw = $this->data->get(JsonAPIDocument\IDocument::KEYWORD_LINKS);
+
+		if (!$raw instanceof Objects\IStandardObject && $raw !== null) {
+			throw new Exceptions\RuntimeException('Links member is not an object.');
+		}
+
+		return LinkObjectCollection::create($raw);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasMeta(): bool
+	{
+		return $this->data->has(JsonAPIDocument\IDocument::KEYWORD_META);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getMeta(): IMetaObjectCollection
+	{
+		$raw = $this->data->get(JsonAPIDocument\IDocument::KEYWORD_META);
+
+		if (!$raw instanceof Objects\IStandardObject && $raw !== null) {
+			throw new Exceptions\RuntimeException('Meta member is not an object.');
+		}
+
+		return MetaObjectCollection::create($raw);
 	}
 
 }

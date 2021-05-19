@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IResourceObjectCollection.php
+ * ILinkObjectCollection.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.ipublikuj.eu
@@ -20,41 +20,56 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * Resource object collection interface
+ * Link object collection interface
  *
  * @package        iPublikuj:JsonAPIDocument!
  * @subpackage     Objects
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IResourceObject>
+ * @extends IteratorAggregate<string, ILinkObject|string>
  */
-interface IResourceObjectCollection extends IteratorAggregate, Countable
+interface ILinkObjectCollection extends IteratorAggregate, Countable
 {
 
 	/**
-	 * @param mixed[] $resource
+	 * @param mixed[] $link
 	 */
-	public function addMany(array $resource): void;
+	public function addMany(array $link): void;
 
 	/**
-	 * @param IResourceObject $resource
+	 * @param ILinkObject|string $link
+	 * @param string $key
 	 *
 	 * @return void
 	 */
-	public function add(IResourceObject $resource): void;
+	public function add($link, string $key): void;
 
 	/**
-	 * @param IResourceObject $resource
+	 * @param string $key
 	 *
 	 * @return bool
 	 */
-	public function has(IResourceObject $resource): bool;
+	public function has(string $key): bool;
 
 	/**
-	 * @return Traversable<int, IResourceObject>
+	 * @param string $key
+	 *
+	 * @return string|ILinkObject|null
+	 */
+	public function get(string $key);
+
+	/**
+	 * @return Traversable<string, ILinkObject|string>
 	 */
 	public function getAll(): Traversable;
+
+	/**
+	 * @param string $key
+	 *
+	 * @return ILinkObject|string
+	 */
+	public function getLink(string $key);
 
 	/**
 	 * @return bool
