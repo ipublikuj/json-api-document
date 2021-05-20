@@ -106,7 +106,11 @@ class LinkObjectCollection implements ILinkObjectCollection
 	 */
 	public function get(string $key)
 	{
-		return $this->has($key) ? $this->stack[$key] : null;
+		if (!$this->has($key)) {
+			throw new Exceptions\RuntimeException(sprintf('Link member "%s" is not present.', $key));
+		}
+
+		return $this->stack[$key];
 	}
 
 	/**
@@ -125,20 +129,8 @@ class LinkObjectCollection implements ILinkObjectCollection
 	public function getAll(): Traversable
 	{
 		foreach (array_keys($this->stack) as $key) {
-			yield $key => $this->getLink($key);
+			yield $key => $this->get($key);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getLink(string $key)
-	{
-		if (!$this->has($key)) {
-			throw new Exceptions\RuntimeException(sprintf('Link member "%s" is not present.', $key));
-		}
-
-		return $this->stack[$key];
 	}
 
 	/**

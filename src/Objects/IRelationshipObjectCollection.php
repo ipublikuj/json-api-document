@@ -55,21 +55,14 @@ interface IRelationshipObjectCollection extends IteratorAggregate, Countable
 	/**
 	 * @param string $key
 	 *
-	 * @return IRelationshipObject|null
+	 * @return IRelationshipObject
 	 */
-	public function get(string $key): ?IRelationshipObject;
+	public function get(string $key): IRelationshipObject;
 
 	/**
 	 * @return Traversable<string, IRelationshipObject>
 	 */
 	public function getAll(): Traversable;
-
-	/**
-	 * @param string $key
-	 *
-	 * @return IRelationshipObject
-	 */
-	public function getRelationship(string $key): IRelationshipObject;
 
 	/**
 	 * @return bool

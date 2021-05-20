@@ -101,9 +101,13 @@ class RelationshipObjectCollection implements IRelationshipObjectCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get(string $key): ?IRelationshipObject
+	public function get(string $key): IRelationshipObject
 	{
-		return $this->has($key) ? $this->stack[$key] : null;
+		if (!$this->has($key)) {
+			throw new Exceptions\RuntimeException(sprintf('Relationship member "%s" is not present.', $key));
+		}
+
+		return $this->stack[$key];
 	}
 
 	/**
@@ -122,20 +126,8 @@ class RelationshipObjectCollection implements IRelationshipObjectCollection
 	public function getAll(): Traversable
 	{
 		foreach (array_keys($this->stack) as $key) {
-			yield $key => $this->getRelationship($key);
+			yield $key => $this->get($key);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getRelationship(string $key): IRelationshipObject
-	{
-		if (!$this->has($key)) {
-			throw new Exceptions\RuntimeException(sprintf('Relationship member "%s" is not present.', $key));
-		}
-
-		return $this->stack[$key];
 	}
 
 	/**

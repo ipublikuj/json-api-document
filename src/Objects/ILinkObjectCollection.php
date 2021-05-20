@@ -55,7 +55,7 @@ interface ILinkObjectCollection extends IteratorAggregate, Countable
 	/**
 	 * @param string $key
 	 *
-	 * @return string|ILinkObject|null
+	 * @return string|ILinkObject
 	 */
 	public function get(string $key);
 
@@ -63,13 +63,6 @@ interface ILinkObjectCollection extends IteratorAggregate, Countable
 	 * @return Traversable<string, ILinkObject|string>
 	 */
 	public function getAll(): Traversable;
-
-	/**
-	 * @param string $key
-	 *
-	 * @return ILinkObject|string
-	 */
-	public function getLink(string $key);
 
 	/**
 	 * @return bool

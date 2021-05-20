@@ -48,9 +48,9 @@ interface IMetaObjectCollection extends IteratorAggregate, Countable
 	/**
 	 * @param string $key
 	 *
-	 * @return IMetaObject|null
+	 * @return IMetaObject
 	 */
-	public function get(string $key): ?IMetaObject;
+	public function get(string $key): IMetaObject;
 
 	/**
 	 * @param string $key
@@ -63,13 +63,6 @@ interface IMetaObjectCollection extends IteratorAggregate, Countable
 	 * @return Traversable<string, IMetaObject>
 	 */
 	public function getAll(): Traversable;
-
-	/**
-	 * @param string $key
-	 *
-	 * @return IMetaObject
-	 */
-	public function getMeta(string $key): IMetaObject;
 
 	/**
 	 * @return bool

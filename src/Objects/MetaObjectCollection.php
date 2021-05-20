@@ -93,9 +93,13 @@ class MetaObjectCollection implements IMetaObjectCollection
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get(string $key): ?IMetaObject
+	public function get(string $key): IMetaObject
 	{
-		return $this->has($key) ? $this->stack[$key] : null;
+		if (!$this->has($key)) {
+			throw new Exceptions\RuntimeException(sprintf('Meta member "%s" is not present.', $key));
+		}
+
+		return $this->stack[$key];
 	}
 
 	/**
@@ -122,20 +126,8 @@ class MetaObjectCollection implements IMetaObjectCollection
 	public function getAll(): Traversable
 	{
 		foreach (array_keys($this->stack) as $key) {
-			yield $key => $this->getMeta($key);
+			yield $key => $this->get($key);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getMeta(string $key): IMetaObject
-	{
-		if (!$this->has($key)) {
-			throw new Exceptions\RuntimeException(sprintf('Meta member "%s" is not present.', $key));
-		}
-
-		return $this->stack[$key];
 	}
 
 	/**
