@@ -16,6 +16,7 @@
 namespace IPub\JsonAPIDocument;
 
 use IPub\JsonAPIDocument\Exceptions\InvalidArgumentException;
+use IPub\JsonAPIDocument\Objects\IStandardObject;
 use JsonException;
 use stdClass;
 
@@ -60,19 +61,35 @@ class Document implements IDocument
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getResource(): ?Objects\IResourceObject
+	public function hasResource(): bool
 	{
 		$data = $this->getData();
 
-		if ($data === null) {
-			return null;
-		}
+		return $data instanceof IStandardObject;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getResource(): Objects\IResourceObject
+	{
+		$data = $this->getData();
 
 		if (!$data instanceof Objects\IStandardObject) {
 			throw new Exceptions\RuntimeException('Data member is not an object.');
 		}
 
 		return new Objects\ResourceObject($data);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasResources(): bool
+	{
+		$data = $this->getData();
+
+		return $data instanceof Objects\IStandardObjectCollection;
 	}
 
 	/**

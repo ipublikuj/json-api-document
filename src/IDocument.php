@@ -123,9 +123,19 @@ interface IDocument
 	public const PATH_SEPARATOR = '.';
 
 	/**
-	 * @return Objects\IResourceObject|null
+	 * @return bool
 	 */
-	public function getResource(): ?Objects\IResourceObject;
+	public function hasResource(): bool;
+
+	/**
+	 * @return Objects\IResourceObject
+	 */
+	public function getResource(): Objects\IResourceObject;
+
+	/**
+	 * @return bool
+	 */
+	public function hasResources(): bool;
 
 	/**
 	 * @return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
