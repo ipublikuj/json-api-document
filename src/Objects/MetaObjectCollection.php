@@ -31,13 +31,19 @@ use Traversable;
 class MetaObjectCollection implements IMetaObjectCollection
 {
 
-	/** @var Array<string, IMetaObject> */
+	/**
+	 * @var mixed[]
+	 *
+	 * @phpstan-var Array<string, IMetaObject>
+	 */
 	private array $stack = [];
 
 	/**
 	 * @param Objects\IStandardObject|null $metaObject
 	 *
-	 * @return IMetaObjectCollection<string, IMetaObject>
+	 * @return IMetaObjectCollection
+	 *
+	 * @phpstan-return IMetaObjectCollection<string, IMetaObject>
 	 */
 	public static function create(?Objects\IStandardObject $metaObject): IMetaObjectCollection
 	{

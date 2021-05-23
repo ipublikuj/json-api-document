@@ -31,13 +31,19 @@ use Traversable;
 class RelationshipObjectCollection implements IRelationshipObjectCollection
 {
 
-	/** @var Array<string, IRelationshipObject> */
+	/**
+	 * @var mixed[]
+
+	 * @phpstan-var Array<string, IRelationshipObject>
+	 */
 	private array $stack = [];
 
 	/**
 	 * @param Objects\IStandardObject|null $relationshipObject
 	 *
-	 * @return IRelationshipObjectCollection<string, IRelationshipObject>
+	 * @return IRelationshipObjectCollection
+	 *
+	 * @phpstan-return IRelationshipObjectCollection<string, IRelationshipObject>
 	 */
 	public static function create(?Objects\IStandardObject $relationshipObject): IRelationshipObjectCollection
 	{

@@ -27,7 +27,7 @@ use Traversable;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<string, IMetaObject>
+ * @phpstan-extends IteratorAggregate<string, IMetaObject>
  */
 interface IMetaObjectCollection extends IteratorAggregate, Countable
 {
@@ -60,7 +60,9 @@ interface IMetaObjectCollection extends IteratorAggregate, Countable
 	public function has(string $key): bool;
 
 	/**
-	 * @return Traversable<string, IMetaObject>
+	 * @return Traversable
+	 *
+	 * @phpstan-return Traversable<string, IMetaObject>
 	 */
 	public function getAll(): Traversable;
 

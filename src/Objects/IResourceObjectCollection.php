@@ -27,7 +27,7 @@ use Traversable;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IResourceObject>
+ * @phpstan-extends IteratorAggregate<int, IResourceObject>
  */
 interface IResourceObjectCollection extends IteratorAggregate, Countable
 {
@@ -52,7 +52,9 @@ interface IResourceObjectCollection extends IteratorAggregate, Countable
 	public function has(IResourceObject $resource): bool;
 
 	/**
-	 * @return Traversable<int, IResourceObject>
+	 * @return Traversable
+	 *
+	 * @phpstan-return Traversable<int, IResourceObject>
 	 */
 	public function getAll(): Traversable;
 

@@ -37,7 +37,9 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 	/**
 	 * @param mixed[] $input
 	 *
-	 * @return IResourceIdentifierCollection<int, IResourceIdentifierObject>
+	 * @return IResourceIdentifierCollection
+	 *
+	 * @phpstan-return IResourceIdentifierCollection<int, IResourceIdentifierObject>
 	 */
 	public static function create(array $input): IResourceIdentifierCollection
 	{

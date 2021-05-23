@@ -26,7 +26,7 @@ use IteratorAggregate;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IResourceIdentifierObject>
+ * @phpstan-extends IteratorAggregate<int, IResourceIdentifierObject>
  */
 interface IResourceIdentifierCollection extends IteratorAggregate, Countable
 {

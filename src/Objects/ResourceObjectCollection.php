@@ -31,13 +31,19 @@ use Traversable;
 class ResourceObjectCollection implements IResourceObjectCollection
 {
 
-	/** @var Array<int, IResourceObject> */
+	/**
+	 * @var mixed[]
+	 *
+	 * @phpstan-var Array<int, IResourceObject>
+	 */
 	private array $stack = [];
 
 	/**
 	 * @param mixed[] $resourceArray
 	 *
-	 * @return IResourceObjectCollection<int, IResourceObject>
+	 * @return IResourceObjectCollection
+	 *
+	 * @phpstan-return IResourceObjectCollection<int, IResourceObject>
 	 */
 	public static function create(array $resourceArray): IResourceObjectCollection
 	{

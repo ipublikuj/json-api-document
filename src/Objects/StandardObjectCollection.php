@@ -30,7 +30,11 @@ use SplObjectStorage;
 class StandardObjectCollection implements IStandardObjectCollection
 {
 
-	/** @var SplObjectStorage<IStandardObject, null> */
+	/**
+	 * @var SplObjectStorage
+	 *
+	 * @phpstan-var SplObjectStorage<IStandardObject, null>
+	 */
 	private SplObjectStorage $stack;
 
 	/**

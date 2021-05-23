@@ -26,7 +26,7 @@ use IteratorAggregate;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IStandardObject<string, mixed>>
+ * @phpstan-extends IteratorAggregate<int, IStandardObject<string, mixed>>
  */
 interface IStandardObjectCollection extends IteratorAggregate, Countable
 {

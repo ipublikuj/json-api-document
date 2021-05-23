@@ -37,7 +37,9 @@ interface ILinkObject
 	public function hasMeta(): bool;
 
 	/**
-	 * @return IMetaObjectCollection<string, IMetaObject>
+	 * @return IMetaObjectCollection
+	 *
+	 * @phpstan-return IMetaObjectCollection<string, IMetaObject>
 	 */
 	public function getMeta(): IMetaObjectCollection;
 

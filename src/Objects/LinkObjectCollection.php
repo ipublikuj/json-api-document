@@ -31,13 +31,19 @@ use Traversable;
 class LinkObjectCollection implements ILinkObjectCollection
 {
 
-	/** @var Array<string, ILinkObject|string> */
+	/**
+	 * @var mixed[]
+	 *
+	 * @phpstan-var Array<string, ILinkObject|string>
+	 */
 	private array $stack = [];
 
 	/**
 	 * @param Objects\IStandardObject|null $linkObject
 	 *
-	 * @return ILinkObjectCollection<string, ILinkObject|string>
+	 * @return ILinkObjectCollection
+	 *
+	 * @phpstan-return ILinkObjectCollection<string, ILinkObject|string>
 	 */
 	public static function create(?Objects\IStandardObject $linkObject): ILinkObjectCollection
 	{
@@ -125,6 +131,8 @@ class LinkObjectCollection implements ILinkObjectCollection
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @phpstan-return Traversable<string, ILinkObject|string>
 	 */
 	public function getAll(): Traversable
 	{

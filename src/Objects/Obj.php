@@ -27,7 +27,9 @@ class Obj
 	 * @param string $key
 	 * @param mixed $default
 	 *
-	 * @return string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null
+	 * @return string|int|float|mixed[]|IStandardObject|null
+	 *
+	 * @phpstan-return string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null
 	 */
 	public static function get($data, string $key, $default = null)
 	{
@@ -60,7 +62,9 @@ class Obj
 	/**
 	 * @param IStandardObject|stdClass $data
 	 *
-	 * @return IStandardObject<string, string|int|float|mixed[]|null>
+	 * @return IStandardObject
+	 *
+	 * @phpstan-return IStandardObject<string, string|int|float|mixed[]|null>
 	 */
 	public static function cast($data): IStandardObject
 	{
@@ -114,7 +118,9 @@ class Obj
 	/**
 	 * @param stdClass|mixed[] $data
 	 *
-	 * @return Array<string, string|int|float|mixed[]|null>
+	 * @return mixed[]
+	 *
+	 * @phpstan-return Array<string, string|int|float|mixed[]|null>
 	 */
 	public static function toArray($data): array
 	{

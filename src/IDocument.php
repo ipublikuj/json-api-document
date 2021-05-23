@@ -138,12 +138,16 @@ interface IDocument
 	public function hasResources(): bool;
 
 	/**
-	 * @return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
+	 * @return Objects\IResourceObjectCollection
+	 *
+	 * @phpstan-return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
 	 */
 	public function getResources(): Objects\IResourceObjectCollection;
 
 	/**
-	 * @return Objects\IStandardObject|Objects\IStandardObjectCollection<int, Objects\IStandardObject>|null
+	 * @return Objects\IStandardObject|Objects\IStandardObjectCollection|null
+	 *
+	 * @phpstan-return Objects\IStandardObject|Objects\IStandardObjectCollection<int, Objects\IStandardObject>|null
 	 */
 	public function getData();
 
@@ -153,7 +157,9 @@ interface IDocument
 	public function hasLinks(): bool;
 
 	/**
-	 * @return Objects\ILinkObjectCollection<string, Objects\ILinkObject|string>
+	 * @return Objects\ILinkObjectCollection
+	 *
+	 * @phpstan-return Objects\ILinkObjectCollection<string, Objects\ILinkObject|string>
 	 */
 	public function getLinks(): Objects\ILinkObjectCollection;
 
@@ -163,7 +169,9 @@ interface IDocument
 	public function hasMeta(): bool;
 
 	/**
-	 * @return Objects\IMetaObjectCollection<string, Objects\IMetaObject>
+	 * @return Objects\IMetaObjectCollection
+	 *
+	 * @phpstan-return Objects\IMetaObjectCollection<string, Objects\IMetaObject>
 	 */
 	public function getMeta(): Objects\IMetaObjectCollection;
 
@@ -173,7 +181,9 @@ interface IDocument
 	public function hasIncluded(): bool;
 
 	/**
-	 * @return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
+	 * @return Objects\IResourceObjectCollection
+	 *
+	 * @phpstan-return Objects\IResourceObjectCollection<int, Objects\IResourceObject>
 	 */
 	public function getIncluded(): Objects\IResourceObjectCollection;
 
@@ -183,7 +193,9 @@ interface IDocument
 	public function hasErrors(): bool;
 
 	/**
-	 * @return Objects\IErrorObjectCollection<int, Objects\IErrorObject>
+	 * @return Objects\IErrorObjectCollection
+	 *
+	 * @phpstan-return Objects\IErrorObjectCollection<int, Objects\IErrorObject>
 	 */
 	public function getErrors(): Objects\IErrorObjectCollection;
 

@@ -12,10 +12,10 @@ Small library for creating [{JSON:API}](http://jsonapi.org) document from object
 
 ## Installation
 
-The best way to install ipub/json-api-document is using  [Composer](http://getcomposer.org/):
+The best way to install **ipub/json-api-document** is using  [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require ipub/json-api-document
+composer require ipub/json-api-document
 ```
 
 ## Documentation

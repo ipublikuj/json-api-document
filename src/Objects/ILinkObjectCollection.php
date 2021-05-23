@@ -60,7 +60,9 @@ interface ILinkObjectCollection extends IteratorAggregate, Countable
 	public function get(string $key);
 
 	/**
-	 * @return Traversable<string, ILinkObject|string>
+	 * @return Traversable
+	 *
+	 * @phpstan-return Traversable<string, ILinkObject|string>
 	 */
 	public function getAll(): Traversable;
 

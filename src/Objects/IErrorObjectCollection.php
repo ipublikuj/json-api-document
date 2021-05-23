@@ -27,7 +27,7 @@ use Traversable;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<int, IErrorObject>
+ * @phpstan-extends IteratorAggregate<int, IErrorObject>
  */
 interface IErrorObjectCollection extends IteratorAggregate, Countable
 {
@@ -52,7 +52,9 @@ interface IErrorObjectCollection extends IteratorAggregate, Countable
 	public function has(IErrorObject $error): bool;
 
 	/**
-	 * @return Traversable<int, IErrorObject>
+	 * @return Traversable
+	 *
+	 * @phpstan-return Traversable<int, IErrorObject>
 	 */
 	public function getAll(): Traversable;
 

@@ -37,7 +37,9 @@ class ErrorObjectCollection implements IErrorObjectCollection
 	/**
 	 * @param mixed[] $errorArray
 	 *
-	 * @return IErrorObjectCollection<int, IErrorObject>
+	 * @return IErrorObjectCollection
+	 *
+	 * @phpstan-return IErrorObjectCollection<int, IErrorObject>
 	 */
 	public static function create(array $errorArray): IErrorObjectCollection
 	{

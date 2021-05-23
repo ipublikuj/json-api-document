@@ -32,6 +32,8 @@ interface IRelationshipObject
 	public function hasLinks(): bool;
 
 	/**
+	 * @phpstan-return ILinkObjectCollection
+	 *
 	 * @return ILinkObjectCollection<string, ILinkObject|string>
 	 */
 	public function getLinks(): ILinkObjectCollection;
@@ -42,7 +44,9 @@ interface IRelationshipObject
 	public function hasData(): bool;
 
 	/**
-	 * @return IResourceIdentifierCollection<int, IResourceIdentifierObject>|IResourceIdentifierObject|null
+	 * @return IResourceIdentifierCollection
+	 *
+	 * @phpstan-return IResourceIdentifierCollection<int, IResourceIdentifierObject>|IResourceIdentifierObject|null
 	 */
 	public function getData();
 
@@ -52,7 +56,9 @@ interface IRelationshipObject
 	public function hasMeta(): bool;
 
 	/**
-	 * @return IMetaObjectCollection<string, IMetaObject>
+	 * @return IMetaObjectCollection
+	 *
+	 * @phpstan-return IMetaObjectCollection<string, IMetaObject>
 	 */
 	public function getMeta(): IMetaObjectCollection;
 
@@ -67,7 +73,9 @@ interface IRelationshipObject
 	public function isHasOne(): bool;
 
 	/**
-	 * @return IResourceIdentifierCollection<int, IResourceIdentifierObject>
+	 * @return IResourceIdentifierCollection
+	 *
+	 * @phpstan-return IResourceIdentifierCollection<int, IResourceIdentifierObject>
 	 */
 	public function getIdentifiers(): IResourceIdentifierCollection;
 

@@ -27,7 +27,7 @@ use Traversable;
  *
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
- * @extends IteratorAggregate<string, IRelationshipObject>
+ * @phpstan-extends IteratorAggregate<string, IRelationshipObject>
  */
 interface IRelationshipObjectCollection extends IteratorAggregate, Countable
 {
@@ -60,7 +60,9 @@ interface IRelationshipObjectCollection extends IteratorAggregate, Countable
 	public function get(string $key): IRelationshipObject;
 
 	/**
-	 * @return Traversable<string, IRelationshipObject>
+	 * @return Traversable
+	 *
+	 * @phpstan-return Traversable<string, IRelationshipObject>
 	 */
 	public function getAll(): Traversable;
 
