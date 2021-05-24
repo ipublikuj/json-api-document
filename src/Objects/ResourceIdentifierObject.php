@@ -32,15 +32,15 @@ class ResourceIdentifierObject implements IResourceIdentifierObject
 	/** @var string */
 	private string $type;
 
-	/** @var string */
-	private string $id;
+	/** @var string|null */
+	private ?string $id;
 
 	public function __construct(IStandardObject $data)
 	{
 		$type = $data->get(JsonAPIDocument\IDocument::KEYWORD_TYPE);
 		$id = $data->get(JsonAPIDocument\IDocument::KEYWORD_ID);
 
-		if (!is_string($type) || !is_string($id)) {
+		if (!is_string($type) || (!is_string($id) && $id !== null)) {
 			throw new Exceptions\InvalidArgumentException('Data member has invalid format');
 		}
 
@@ -51,7 +51,7 @@ class ResourceIdentifierObject implements IResourceIdentifierObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getId(): string
+	public function getId(): ?string
 	{
 		return $this->id;
 	}

@@ -178,7 +178,9 @@ class ResourceIdentifierCollection implements IResourceIdentifierCollection
 		$ids = [];
 
 		foreach ($this->stack as $identifier) {
-			$ids[] = $identifier->getId();
+			if ($identifier->getId() !== null) {
+				$ids[] = $identifier->getId();
+			}
 		}
 
 		return $ids;

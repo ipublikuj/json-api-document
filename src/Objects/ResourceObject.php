@@ -39,8 +39,10 @@ class ResourceObject implements IResourceObject
 	public function __construct(Objects\IStandardObject $data)
 	{
 		if (
-			!$data->has(JsonAPIDocument\IDocument::KEYWORD_ID)
-			|| !is_string($data->get(JsonAPIDocument\IDocument::KEYWORD_ID))
+			(
+				$data->has(JsonAPIDocument\IDocument::KEYWORD_ID)
+				&& !is_string($data->get(JsonAPIDocument\IDocument::KEYWORD_ID))
+			)
 			|| !$data->has(JsonAPIDocument\IDocument::KEYWORD_TYPE)
 			|| !is_string($data->get(JsonAPIDocument\IDocument::KEYWORD_TYPE))
 		) {
@@ -54,7 +56,7 @@ class ResourceObject implements IResourceObject
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getId(): string
+	public function getId(): ?string
 	{
 		return $this->identifier->getId();
 	}
