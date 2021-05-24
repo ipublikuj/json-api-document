@@ -187,12 +187,15 @@ class Document implements IDocument
 	{
 		$raw = $this->data->get(self::KEYWORD_INCLUDED);
 
-		if (!is_array($raw)) {
+		if (!is_array($raw) && $raw !== null) {
 			throw new Exceptions\RuntimeException('Included member is not an array.');
 		}
 
-		return Objects\ResourceObjectCollection::create(Objects\StandardObjectCollection::create($raw)
-			->getAll());
+		if ($raw === null) {
+			return Objects\ResourceObjectCollection::create(Objects\StandardObjectCollection::create([])->getAll());
+		}
+
+		return Objects\ResourceObjectCollection::create(Objects\StandardObjectCollection::create($raw)->getAll());
 	}
 
 	/**
