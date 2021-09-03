@@ -26,11 +26,11 @@ namespace IPub\JsonAPIDocument\Objects;
 class MetaObject implements IMetaObject
 {
 
-	/** @var string|int|float|mixed[] */
+	/** @var string|int|float|bool|mixed[] */
 	private $value;
 
 	/**
-	 * @param string|int|float|mixed[] $value
+	 * @param string|int|float|bool|mixed[] $value
 	 */
 	public function __construct($value)
 	{

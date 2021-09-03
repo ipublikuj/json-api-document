@@ -37,9 +37,9 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 * @param string $key
 	 * @param mixed $default
 	 *
-	 * @return string|int|float|mixed[]|IStandardObject|null
+	 * @return string|int|float|bool|mixed[]|IStandardObject|null
 	 *
-	 * @phpstan-return string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null
+	 * @phpstan-return string|int|float|bool|mixed[]|IStandardObject<string, string|int|float|bool|mixed[]|null>|null
 	 */
 	public function get(string $key, $default = null);
 
@@ -48,7 +48,7 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 *
 	 * @return mixed[]
 	 *
-	 * @phpstan-return Array<string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>>
+	 * @phpstan-return Array<string|int|float|bool|mixed[]|IStandardObject<string, string|int|float|bool|mixed[]|null>>
 	 */
 	public function getMany(...$keys): array;
 
@@ -58,9 +58,9 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 *
 	 * @return IStandardObject
 	 *
-	 * @phpstan-param string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null $value
+	 * @phpstan-param string|int|float|bool|mixed[]|IStandardObject<string, string|int|float|bool|mixed[]|null>|null $value
 	 *
-	 * @phpstan-return IStandardObject<string, string|int|float|mixed[]|null>
+	 * @phpstan-return IStandardObject<string, string|int|float|bool|mixed[]|null>
 	 */
 	public function set(string $key, $value): IStandardObject;
 
@@ -69,9 +69,9 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 *
 	 * @return IStandardObject
 	 *
-	 * @phpstan-param Array<string, string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>> $values
+	 * @phpstan-param Array<string, string|int|float|bool|mixed[]|IStandardObject<string, string|int|float|bool|mixed[]|null>> $values
 	 *
-	 * @phpstan-return IStandardObject<string, string|int|float|mixed[]|null>
+	 * @phpstan-return IStandardObject<string, string|int|float|bool|mixed[]|null>
 	 */
 	public function setMany(array $values): IStandardObject;
 
@@ -97,7 +97,7 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	/**
 	 * @return IStandardObject
 	 *
-	 * @phpstan-return IStandardObject<string, string|int|float|mixed[]|null>
+	 * @phpstan-return IStandardObject<string, string|int|float|bool|mixed[]|null>
 	 */
 	public function copy(): IStandardObject;
 
@@ -106,7 +106,7 @@ interface IStandardObject extends Traversable, Countable, JsonSerializable
 	 *
 	 * @return IStandardObject
 	 *
-	 * @phpstan-return IStandardObject<string, string|int|float|mixed[]|null>
+	 * @phpstan-return IStandardObject<string, string|int|float|bool|mixed[]|null>
 	 */
 	public function remove(...$key): IStandardObject;
 

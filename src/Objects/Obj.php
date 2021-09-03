@@ -27,9 +27,9 @@ class Obj
 	 * @param string $key
 	 * @param mixed $default
 	 *
-	 * @return string|int|float|mixed[]|IStandardObject|null
+	 * @return string|int|float|bool|mixed[]|IStandardObject|null
 	 *
-	 * @phpstan-return string|int|float|mixed[]|IStandardObject<string, string|int|float|mixed[]|null>|null
+	 * @phpstan-return string|int|float|bool|mixed[]|IStandardObject<string, string|int|float|bool|mixed[]|null>|null
 	 */
 	public static function get($data, string $key, $default = null)
 	{
@@ -64,7 +64,7 @@ class Obj
 	 *
 	 * @return IStandardObject
 	 *
-	 * @phpstan-return IStandardObject<string, string|int|float|mixed[]|null>
+	 * @phpstan-return IStandardObject<string, string|int|float|bool|mixed[]|null>
 	 */
 	public static function cast($data): IStandardObject
 	{
@@ -94,7 +94,7 @@ class Obj
 	 *
 	 * @return Traversable
 	 *
-	 * @phpstan-return Traversable<string, string|int|float|mixed[]|IStandardObject|null>
+	 * @phpstan-return Traversable<string, string|int|float|bool|mixed[]|IStandardObject|null>
 	 */
 	public static function traverse($data): Traversable
 	{
@@ -120,7 +120,7 @@ class Obj
 	 *
 	 * @return mixed[]
 	 *
-	 * @phpstan-return Array<string, string|int|float|mixed[]|null>
+	 * @phpstan-return Array<string, string|int|float|bool|mixed[]|null>
 	 */
 	public static function toArray($data): array
 	{

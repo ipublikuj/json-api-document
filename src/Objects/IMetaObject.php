@@ -27,7 +27,7 @@ interface IMetaObject
 {
 
 	/**
-	 * @return string|int|float|mixed[]
+	 * @return string|int|float|bool|mixed[]
 	 */
 	public function getValue();
 
