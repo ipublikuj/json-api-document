@@ -56,7 +56,7 @@ class Obj
 			return $mapped;
 		}
 
-		return (string) $value;
+		return $value;
 	}
 
 	/**
@@ -105,12 +105,12 @@ class Obj
 
 		if (is_array($data)) {
 			foreach ($data as $key => $value) {
-				yield $key => $value instanceof stdClass ? static::cast($value) : ($value === null ? null : (string) $value);
+				yield $key => $value instanceof stdClass ? static::cast($value) : $value;
 			}
 
 		} else {
 			foreach (array_keys(get_object_vars($data)) as $key) {
-				yield $key => $data->{$key} instanceof stdClass ? static::cast($data->{$key}) : ($data->{$key} === null ? null : (string) $data->{$key});
+				yield $key => $data->{$key} instanceof stdClass ? static::cast($data->{$key}) : $data->{$key};
 			}
 		}
 	}
@@ -133,12 +133,12 @@ class Obj
 
 		if (is_array($data)) {
 			foreach ($data as $key => $value) {
-				$arr[$key] = ($value instanceof stdClass || is_array($value)) ? static::toArray($value) : ($value === null ? null : (string) $value);
+				$arr[$key] = ($value instanceof stdClass || is_array($value)) ? static::toArray($value) : $value;
 			}
 
 		} else {
 			foreach (array_keys(get_object_vars($data)) as $key) {
-				$arr[$key] = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? static::toArray($data->{$key}) : ($data->{$key} === null ? null : (string) $data->{$key});
+				$arr[$key] = ($data->{$key} instanceof stdClass || is_array($data->{$key})) ? static::toArray($data->{$key}) : $data->{$key};
 			}
 		}
 
